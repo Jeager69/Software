@@ -35,15 +35,16 @@
 
         <h4 class="mt-3 mb-2">Detalles de Matrícula</h4>
         <div class="row mb-2">
-            <div class="col-6"><strong>Categoría:</strong> <span th:text="${matricula.categoria != null ? matricula.categoria.nombreCategoria : 'Auto por edad'}"></span></div>
+            <div class="col-6"><strong>Categoría:</strong> <span th:text="${matricula.categoria != null ? matricula.categoria.nombreCategoria : 'sub-10'}"></span></div>
             <div class="col-3"><strong>Monto:</strong> <span th:text="${matricula.categoria != null ? 'S/ ' + matricula.categoria.montoMatricula : 'S/ 0.00'}"></span></div>
             <div class="col-3"><strong>Estado:</strong> <span th:text="${matricula.estado}"></span></div>
         </div>
 
         <h4 class="mt-3 mb-2">Pago</h4>
         <div class="row mb-4">
-            <div class="col-6"><strong>N° Operación:</strong> <span th:text="${pago != null ? pago.numeroOperacion : 'No registrado'}"></span></div>
-            <div class="col-6"><strong>Estado Pago:</strong> <span th:text="${pago != null ? pago.estadoPago : 'N/A'}"></span></div>
+            <div class="col-4"><strong>Método pago:</strong> <span th:text="${pago != null ? pago.metodoPago : 'No registrado'}"></span></div>
+            <div class="col-4"><strong>Monto ingresado:</strong> <span th:text="${pago != null ? 'S/ ' + pago.monto : 'No registrado'}"></span></div>
+            <div class="col-4"><strong>Estado Pago:</strong> <span th:text="${pago != null ? pago.estadoPago : 'N/A'}"></span></div>
         </div>
 
         <div class="text-center mt-4">

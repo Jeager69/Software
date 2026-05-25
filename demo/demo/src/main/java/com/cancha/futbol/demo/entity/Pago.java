@@ -2,6 +2,7 @@ package com.cancha.futbol.demo.entity;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -22,7 +24,13 @@ public class Pago {
     private Long idPago;
     
     private Double monto;
-    private String numeroOperacion;
+
+    @Size(max = 50, message = "El método de pago no puede superar 50 caracteres")
+    @Column(length = 50)
+    private String metodoPago;
+
+    private Double vuelto = 0.0;
+
     private LocalDateTime fechaPago = LocalDateTime.now();
     
     @Enumerated(EnumType.STRING)

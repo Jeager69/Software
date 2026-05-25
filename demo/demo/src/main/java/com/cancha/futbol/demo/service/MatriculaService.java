@@ -134,8 +134,48 @@ public class MatriculaService {
     @Transactional
     public Matricula update(Long id, Matricula m) {
         Matricula exist = getById(id);
-        m.setIdMatricula(exist.getIdMatricula());
-        return create(m);
+        Alumno alumno = resolveAlumno(m.getAlumno());
+        exist.setAlumno(alumno);
+
+        Categoria currentCategoria = exist.getCategoria();
+        Categoria newCategoria = currentCategoria;
+        if (m.getCategoria() != null && m.getCategoria().getIdCategoria() != null) {
+            newCategoria = categoriaRepo.findById(m.getCategoria().getIdCategoria())
+                    .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrada para matricula"));
+        }
+
+        if (newCategoria == null) {
+            if (alumno.getFechaNacimiento() == null) {
+                throw new ResourceNotFoundException("Fecha de nacimiento del alumno es requerida para asignar categoria");
+            }
+            int edad = Period.between(alumno.getFechaNacimiento(), LocalDate.now()).getYears();
+            newCategoria = categoriaRepo
+                    .findFirstByEdadMinimaLessThanEqualAndEdadMaximaGreaterThanEqual(edad, edad)
+                    .orElseThrow(() -> new ResourceNotFoundException("No existe categoria para la edad: " + edad));
+        }
+
+        if (currentCategoria == null || !newCategoria.getIdCategoria().equals(currentCategoria.getIdCategoria())) {
+            if (newCategoria.getCuposDisponibles() == null || newCategoria.getCuposDisponibles() <= 0) {
+                throw new ResourceNotFoundException("No hay cupos disponibles en la categoria: " + newCategoria.getNombreCategoria());
+            }
+            if (currentCategoria != null && currentCategoria.getIdCategoria() != null) {
+                Categoria oldCat = categoriaRepo.findById(currentCategoria.getIdCategoria()).orElse(null);
+                if (oldCat != null) {
+                    Integer cupos = oldCat.getCuposDisponibles() == null ? 0 : oldCat.getCuposDisponibles();
+                    oldCat.setCuposDisponibles(cupos + 1);
+                    categoriaRepo.save(oldCat);
+                }
+            }
+            Integer nuevosCupos = newCategoria.getCuposDisponibles() == null ? 0 : newCategoria.getCuposDisponibles();
+            newCategoria.setCuposDisponibles(nuevosCupos - 1);
+            categoriaRepo.save(newCategoria);
+            exist.setCategoria(newCategoria);
+        }
+
+        if (m.getEstado() != null) {
+            exist.setEstado(m.getEstado());
+        }
+        return repo.save(exist);
     }
 
     private Alumno resolveAlumno(Alumno alumno) {
