@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard de Administración - El Puntapié de Oro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+
     <style>
         :root {
-            --verde-principal: #1b5e20; /* El verde oscuro del encabezado de tus diapositivas */
+            --verde-principal: #1b5e20;
+            /* El verde oscuro del encabezado de tus diapositivas */
             --verde-hover: #144317;
             --verde-suave: #e8f5e9;
-            --amarillo-acento: #ffb300; /* El naranja/amarillo de los botones y alertas */
+            --amarillo-acento: #ffb300;
+            /* El naranja/amarillo de los botones y alertas */
             --amarillo-hover: #ff8f00;
             --texto-oscuro: #212529;
         }
@@ -21,6 +25,7 @@
             background-color: var(--verde-principal) !important;
             border-bottom: 4px solid var(--amarillo-acento);
         }
+
         .navbar-custom .nav-link.active {
             color: var(--amarillo-acento) !important;
             font-weight: bold;
@@ -31,6 +36,7 @@
             border: 1px solid rgba(27, 94, 32, 0.15);
             border-radius: 8px;
         }
+
         .card-header {
             background-color: var(--verde-suave) !important;
             color: var(--verde-principal) !important;
@@ -50,15 +56,18 @@
             border-color: var(--verde-principal) !important;
             color: white !important;
         }
+
         .btn-primary-custom:hover {
             background-color: var(--verde-hover) !important;
         }
+
         .btn-accent-custom {
             background-color: var(--amarillo-acento) !important;
             border-color: var(--amarillo-acento) !important;
             color: var(--texto-oscuro) !important;
             font-weight: 500;
         }
+
         .btn-accent-custom:hover {
             background-color: var(--amarillo-hover) !important;
             color: var(--texto-oscuro) !important;
@@ -70,28 +79,38 @@
             color: white;
             font-weight: 500;
         }
+
         .table-hover tbody tr:hover {
             background-color: var(--verde-suave);
         }
     </style>
 </head>
+
 <body class="bg-light text-dark">
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="/dashboard">
                 <span class="fs-4 fw-bold">⚽ Academia Fútbol</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'dashboard' || entity == null} ? ' active'" href="/dashboard">Resumen</a></li>
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'alumnos'} ? ' active'" href="/dashboard?entity=alumnos">Alumnos</a></li>
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'categorias'} ? ' active'" href="/dashboard?entity=categorias">Categorías</a></li>
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'matriculas'} ? ' active'" href="/dashboard?entity=matriculas">Matrículas</a></li>
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'pagos'} ? ' active'" href="/dashboard?entity=pagos">Pagos</a></li>
-                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'reportes'} ? ' active'" href="/dashboard/reportes-avanzados">Reportes avanzados</a></li>
+                    <li class="nav-item"><a class="nav-link"
+                            th:classappend="${entity == 'dashboard' || entity == null} ? ' active'"
+                            href="/dashboard">Resumen</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'alumnos'} ? ' active'"
+                            href="/dashboard?entity=alumnos">Alumnos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'categorias'} ? ' active'"
+                            href="/dashboard?entity=categorias">Categorías</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'matriculas'} ? ' active'"
+                            href="/dashboard?entity=matriculas">Matrículas</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'pagos'} ? ' active'"
+                            href="/dashboard?entity=pagos">Pagos</a></li>
+                    <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'reportes'} ? ' active'"
+                            href="/dashboard/reportes-avanzados">Reportes avanzados</a></li>
                 </ul>
                 <form class="d-flex" action="/logout" method="post">
                     <button class="btn btn-outline-light btn-sm" type="submit">Cerrar sesión</button>
@@ -140,10 +159,8 @@
                                 <label class="form-label small fw-bold text-secondary">Estado</label>
                                 <select class="form-select" name="estado">
                                     <option value="" th:text="'Todas'" th:selected="${selectedEstado == null}"></option>
-                                    <option th:each="estadoOption : ${estadoOptions}"
-                                            th:value="${estadoOption}"
-                                            th:text="${estadoOption}"
-                                            th:selected="${estadoOption == selectedEstado}">
+                                    <option th:each="estadoOption : ${estadoOptions}" th:value="${estadoOption}"
+                                        th:text="${estadoOption}" th:selected="${estadoOption == selectedEstado}">
                                     </option>
                                 </select>
                             </div>
@@ -158,10 +175,17 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a class="btn btn-outline-secondary" th:href="@{/dashboard/report(entity='alumnos',format='pdf')}">Exportar Alumnos en PDF</a>
-                            <a class="btn btn-outline-secondary" th:href="@{/dashboard/report(entity='categorias',format='pdf')}">Exportar Categorías en PDF</a>
-                            <a class="btn btn-outline-secondary" th:href="@{/dashboard/report(entity='matriculas',format='pdf')}">Exportar Matrículas en PDF</a>
-                            <a class="btn btn-outline-secondary" th:href="@{/dashboard/report(entity='pagos',format='pdf')}">Exportar Pagos en PDF</a>
+                            <a class="btn btn-outline-secondary"
+                                th:href="@{/dashboard/report(entity='alumnos',format='pdf')}">Exportar Alumnos en
+                                PDF</a>
+                            <a class="btn btn-outline-secondary"
+                                th:href="@{/dashboard/report(entity='categorias',format='pdf')}">Exportar Categorías en
+                                PDF</a>
+                            <a class="btn btn-outline-secondary"
+                                th:href="@{/dashboard/report(entity='matriculas',format='pdf')}">Exportar Matrículas en
+                                PDF</a>
+                            <a class="btn btn-outline-secondary"
+                                th:href="@{/dashboard/report(entity='pagos',format='pdf')}">Exportar Pagos en PDF</a>
                         </div>
                     </div>
                 </div>
@@ -169,41 +193,51 @@
 
             <div class="col-lg-9">
                 <div th:switch="${entity}">
-                    
+
                     <div th:case="'dashboard'">
                         <div class="mb-4 d-flex justify-content-end">
                             <a class="btn btn-accent-custom btn-lg" href="/dashboard/registro">Registrar matrícula</a>
                         </div>
                         <div class="row g-3 mb-4">
                             <div class="col-sm-6 col-xl-3">
-                                <div class="card shadow-sm border-start border-4" style="border-left-color: var(--verde-principal) !important;">
+                                <div class="card shadow-sm border-start border-4"
+                                    style="border-left-color: var(--verde-principal) !important;">
                                     <div class="card-body">
                                         <h6 class="card-title text-secondary small text-uppercase fw-bold">Alumnos</h6>
-                                        <p class="display-6 fw-bold text-dark mb-0"><span th:text="${alumnoCount}">0</span></p>
+                                        <p class="display-6 fw-bold text-dark mb-0"><span
+                                                th:text="${alumnoCount}">0</span></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-xl-3">
-                                <div class="card shadow-sm border-start border-4" style="border-left-color: var(--verde-principal) !important;">
+                                <div class="card shadow-sm border-start border-4"
+                                    style="border-left-color: var(--verde-principal) !important;">
                                     <div class="card-body">
-                                        <h6 class="card-title text-secondary small text-uppercase fw-bold">Categorías</h6>
-                                        <p class="display-6 fw-bold text-dark mb-0"><span th:text="${categoriaCount}">0</span></p>
+                                        <h6 class="card-title text-secondary small text-uppercase fw-bold">Categorías
+                                        </h6>
+                                        <p class="display-6 fw-bold text-dark mb-0"><span
+                                                th:text="${categoriaCount}">0</span></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-xl-3">
-                                <div class="card shadow-sm border-start border-4" style="border-left-color: var(--amarillo-acento) !important;">
+                                <div class="card shadow-sm border-start border-4"
+                                    style="border-left-color: var(--amarillo-acento) !important;">
                                     <div class="card-body">
-                                        <h6 class="card-title text-secondary small text-uppercase fw-bold">Matrículas</h6>
-                                        <p class="display-6 fw-bold text-dark mb-0"><span th:text="${matriculaCount}">0</span></p>
+                                        <h6 class="card-title text-secondary small text-uppercase fw-bold">Matrículas
+                                        </h6>
+                                        <p class="display-6 fw-bold text-dark mb-0"><span
+                                                th:text="${matriculaCount}">0</span></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-6 col-xl-3">
-                                <div class="card shadow-sm border-start border-4" style="border-left-color: var(--amarillo-acento) !important;">
+                                <div class="card shadow-sm border-start border-4"
+                                    style="border-left-color: var(--amarillo-acento) !important;">
                                     <div class="card-body">
                                         <h6 class="card-title text-secondary small text-uppercase fw-bold">Pagos</h6>
-                                        <p class="display-6 fw-bold text-dark mb-0"><span th:text="${pagoCount}">0</span></p>
+                                        <p class="display-6 fw-bold text-dark mb-0"><span
+                                                th:text="${pagoCount}">0</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -213,23 +247,29 @@
                                 Vista general
                             </div>
                             <div class="card-body">
-                                <p class="mb-0">Bienvenido al sistema administrativo. Selecciona una entidad desde el menú superior para auditar los registros y aplicar las acciones de administración del Sprint 1.</p>
+                                <p class="mb-0">Bienvenido al sistema administrativo. Selecciona una entidad desde el
+                                    menú superior para auditar los registros y aplicar las acciones de administración
+                                    del Sprint 1.</p>
                             </div>
                         </div>
                     </div>
 
                     <div th:case="'registro'">
                         <div class="card shadow-sm mb-4">
-                            <div class="card-header" th:text="${matricula != null and matricula.idMatricula != null} ? 'Editar Matrícula' : 'Registrar Matrícula'">Registrar Matrícula</div>
+                            <div class="card-header"
+                                th:text="${matricula != null and matricula.idMatricula != null} ? 'Editar Matrícula' : 'Registrar Matrícula'">
+                                Registrar Matrícula</div>
                             <div class="card-body">
                                 <div class="row mb-4">
                                     <div class="col-12">
                                         <div class="progress" style="height: 2rem;">
-                                            <div id="progressBar" class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 33%;">Paso 1 de 3</div>
+                                            <div id="progressBar" class="progress-bar progress-bar-striped bg-success"
+                                                role="progressbar" style="width: 33%;">Paso 1 de 3</div>
                                         </div>
                                     </div>
                                 </div>
-                                <form id="registroForm" th:action="@{/dashboard/registro}" th:object="${matricula}" method="post">
+                                <form id="registroForm" th:action="@{/dashboard/registro}" th:object="${matricula}"
+                                    method="post">
                                     <div th:if="${registroError}" class="alert alert-danger">[[${registroError}]]</div>
                                     <div th:if="${formErrors != null}" class="alert alert-danger">
                                         <strong>Corrige los siguientes errores:</strong>
@@ -243,39 +283,65 @@
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">Nombre completo *</label>
-                                                <input type="text" class="form-control" th:field="*{alumno.nombreCompleto}" placeholder="Ej. Juan Pérez Ríos" maxlength="100" required
-                                                       th:classappend="${#fields.hasErrors('alumno.nombreCompleto')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.nombreCompleto')}" th:errors="*{alumno.nombreCompleto}"></div>
+                                                <input type="text" class="form-control"
+                                                    th:field="*{alumno.nombreCompleto}"
+                                                    placeholder="Ej. Juan Pérez Ríos" maxlength="100" required
+                                                    th:classappend="${#fields.hasErrors('alumno.nombreCompleto')} ? ' is-invalid'" />
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('alumno.nombreCompleto')}"
+                                                    th:errors="*{alumno.nombreCompleto}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">DNI / Documento *</label>
-                                                <input type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" class="form-control" th:field="*{alumno.dni}" placeholder="12345678" required
-                                                       th:classappend="${#fields.hasErrors('alumno.dni')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.dni')}" th:errors="*{alumno.dni}"></div>
+                                                <input type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8"
+                                                    class="form-control" th:field="*{alumno.dni}" placeholder="12345678"
+                                                    required
+                                                    th:readonly="${matricula != null and matricula.idMatricula != null}"
+                                                    th:classappend="${(matricula != null and matricula.idMatricula != null) ? 'bg-light text-muted' : ''} + ' ' + (${#fields.hasErrors('alumno.dni')} ? ' is-invalid' : '')"
+                                                    th:required="${matricula == null or matricula.idMatricula == null}" />
+                                                <div class="form-text text-muted"
+                                                    th:if="${matricula != null and matricula.idMatricula != null}">El
+                                                    DNI no puede modificarse.</div>
+                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.dni')}"
+                                                    th:errors="*{alumno.dni}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Fecha de nacimiento *</label>
-                                                <input type="date" class="form-control" th:field="*{alumno.fechaNacimiento}" required
-                                                       th:classappend="${#fields.hasErrors('alumno.fechaNacimiento')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.fechaNacimiento')}" th:errors="*{alumno.fechaNacimiento}"></div>
+                                                <input type="date" class="form-control"
+                                                    th:field="*{alumno.fechaNacimiento}" required
+                                                    th:classappend="${#fields.hasErrors('alumno.fechaNacimiento')} ? ' is-invalid'" />
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('alumno.fechaNacimiento')}"
+                                                    th:errors="*{alumno.fechaNacimiento}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Correo del tutor *</label>
-                                                <input type="email" class="form-control" th:field="*{alumno.correoTutor}" placeholder="correo@ejemplo.com" maxlength="100" required
-                                                       th:classappend="${#fields.hasErrors('alumno.correoTutor')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.correoTutor')}" th:errors="*{alumno.correoTutor}"></div>
+                                                <input type="email" class="form-control"
+                                                    th:field="*{alumno.correoTutor}" placeholder="correo@ejemplo.com"
+                                                    maxlength="100" required
+                                                    th:classappend="${#fields.hasErrors('alumno.correoTutor')} ? ' is-invalid'" />
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('alumno.correoTutor')}"
+                                                    th:errors="*{alumno.correoTutor}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Nombre del tutor</label>
-                                                <input type="text" class="form-control" th:field="*{alumno.nombreTutor}" placeholder="Nombre del tutor" maxlength="100"
-                                                       th:classappend="${#fields.hasErrors('alumno.nombreTutor')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.nombreTutor')}" th:errors="*{alumno.nombreTutor}"></div>
+                                                <input type="text" class="form-control" th:field="*{alumno.nombreTutor}"
+                                                    placeholder="Nombre del tutor" maxlength="100" required
+                                                    th:classappend="${#fields.hasErrors('alumno.nombreTutor')} ? ' is-invalid'" />
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('alumno.nombreTutor')}"
+                                                    th:errors="*{alumno.nombreTutor}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Teléfono del tutor</label>
-                                                <input type="tel" inputmode="numeric" pattern="^$|[0-9]{9}" maxlength="9" class="form-control" th:field="*{alumno.telefonoTutor}" placeholder="999999999"
-                                                       th:classappend="${#fields.hasErrors('alumno.telefonoTutor')} ? ' is-invalid'" />
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('alumno.telefonoTutor')}" th:errors="*{alumno.telefonoTutor}"></div>
+                                                <input type="tel" inputmode="numeric" pattern="^$|[0-9]{9}"
+                                                    maxlength="9" class="form-control"
+                                                    th:field="*{alumno.telefonoTutor}" placeholder="999999999" required
+                                                    th:classappend="${#fields.hasErrors('alumno.telefonoTutor')} ? ' is-invalid'" />
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('alumno.telefonoTutor')}"
+                                                    th:errors="*{alumno.telefonoTutor}"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -284,41 +350,73 @@
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label">Categoría *</label>
-                                                <select id="categoriaSelect" class="form-select" th:field="*{categoria.idCategoria}" required
-                                                        th:classappend="${#fields.hasErrors('categoria.idCategoria')} ? ' is-invalid'">
+                                                <select id="categoriaSelect" class="form-select"
+                                                    th:field="*{categoria.idCategoria}" required
+                                                    th:classappend="${#fields.hasErrors('categoria.idCategoria')} ? ' is-invalid'">
                                                     <option value="" disabled selected>Seleccionar categoría</option>
-                                                    <option th:each="categoria : ${categorias}"
-                                                            th:value="${categoria.idCategoria}"
-                                                            th:text="${categoria.nombreCategoria + ' - S/ ' + categoria.montoMatricula}"
-                                                            th:attr="data-minima=${categoria.edadMinima},data-maxima=${categoria.edadMaxima},data-monto=${categoria.montoMatricula}">
+                                                    <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}"
+                                                        th:text="${cat.nombreCategoria + ' - S/ ' + cat.montoMatricula}"
+                                                        th:attr="data-minima=${cat.edadMinima},data-maxima=${cat.edadMaxima},data-monto=${cat.montoMatricula}">
                                                     </option>
                                                 </select>
-                                                <div class="invalid-feedback" th:if="${#fields.hasErrors('categoria.idCategoria')}" th:errors="*{categoria.idCategoria}"></div>
+                                                <div class="invalid-feedback"
+                                                    th:if="${#fields.hasErrors('categoria.idCategoria')}"
+                                                    th:errors="*{categoria.idCategoria}"></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label">Monto estimado</label>
-                                                <input type="text" class="form-control" id="montoPreview" readonly value="S/ 0.00" />
+                                                <input type="text" class="form-control" id="montoPreview" readonly
+                                                    value="S/ 0.00" />
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Método de pago *</label>
-                                                <select class="form-select" name="metodoPago" id="metodoPago" th:attr="required=${matricula.idMatricula == null}">
-                                                    <option value="" disabled selected>Seleccionar método</option>
-                                                    <option value="Efectivo">Efectivo</option>
-                                                    <option value="Tarjeta">Tarjeta</option>
-                                                    <option value="Transferencia">Transferencia</option>
-                                                    <option value="Yape">Yape</option>
-                                                </select>
+
+                                            <!-- Sección de pago: solo visible al REGISTRAR, no al EDITAR -->
+                                            <div th:if="${matricula == null or matricula.idMatricula == null}"
+                                                class="col-12">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Método de pago *</label>
+                                                        <select class="form-select" name="metodoPago" id="metodoPago"
+                                                            required>
+                                                            <option value="" disabled selected>Seleccionar método
+                                                            </option>
+                                                            <option value="Efectivo">Efectivo</option>
+                                                            <option value="Tarjeta">Tarjeta</option>
+                                                            <option value="Transferencia">Transferencia</option>
+                                                            <option value="Yape">Yape</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Monto ingresado *</label>
+                                                        <input type="number" step="0.01" min="0" class="form-control"
+                                                            name="montoPago" id="montoPago" placeholder="Ej. 150.00"
+                                                            required />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label class="form-label">Vuelto</label>
+                                                        <input type="text" readonly class="form-control"
+                                                            id="vueltoValue" value="S/ 0.00" />
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <div class="text-danger" th:if="${montoError}"
+                                                            th:text="${montoError}"></div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Monto ingresado *</label>
-                                                <input type="number" step="0.01" min="0" class="form-control" name="montoPago" id="montoPago" placeholder="Ej. 150.00" th:attr="required=${matricula.idMatricula == null}" />
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label">Vuelto</label>
-                                                <input type="text" readonly class="form-control" id="vueltoValue" value="S/ 0.00" />
-                                            </div>
-                                            <div class="col-md-4 align-self-end">
-                                                <div class="text-danger" th:if="${montoError}" th:text="${montoError}"></div>
+
+                                            <!-- Información de pago ya registrado (solo en modo EDITAR) -->
+                                            <div th:if="${matricula != null and matricula.idMatricula != null}"
+                                                class="col-12">
+                                                <div class="alert alert-info d-flex align-items-start gap-2 mb-0"
+                                                    role="alert">
+                                                    <span style="font-size:1.3rem;">🔒</span>
+                                                    <div>
+                                                        <strong>Datos de pago (no modificables)</strong><br />
+                                                        El monto pagado y el método de pago son datos históricos y no
+                                                        pueden cambiarse desde esta pantalla.
+                                                    </div>
+                                                </div>
+                                                <!-- Campos ocultos para que el formulario no requiera pago en edición -->
+                                                <input type="hidden" name="metodoPago" value="" />
                                             </div>
                                         </div>
                                     </div>
@@ -341,24 +439,31 @@
                                                 <div class="mb-3">
                                                     <strong>Monto estimado:</strong> <span id="summaryMonto"></span>
                                                 </div>
-                                                <div class="mb-3">
+                                                <!-- Resumen de pago: solo en modo registro -->
+                                                <div class="mb-3" id="summaryMetodoRow">
                                                     <strong>Método de pago:</strong> <span id="summaryMetodo"></span>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <strong>Monto ingresado:</strong> <span id="summaryMontoPago"></span>
+                                                <div class="mb-3" id="summaryMontoPagoRow">
+                                                    <strong>Monto ingresado:</strong> <span
+                                                        id="summaryMontoPago"></span>
                                                 </div>
-                                                <div class="mb-3">
+                                                <div class="mb-3" id="summaryVueltoRow">
                                                     <strong>Vuelto:</strong> <span id="summaryVuelto"></span>
                                                 </div>
-                                                <p class="mb-0 text-success">Al confirmar, la matrícula quedará registrada y las tablas se actualizarán automáticamente.</p>
+                                                <p class="mb-0 text-success">Al confirmar, los cambios quedarán
+                                                    guardados.</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="d-flex justify-content-between mt-3">
-                                        <button type="button" id="prevStep" class="btn btn-outline-secondary d-none">Volver</button>
-                                        <button type="button" id="nextStep" class="btn btn-accent-custom">Siguiente</button>
-                                        <button type="submit" id="submitButton" class="btn btn-primary-custom d-none">Confirmar Matrícula</button>
+                                        <button type="button" id="prevStep"
+                                            class="btn btn-outline-secondary d-none">Volver</button>
+                                        <button type="button" id="nextStep"
+                                            class="btn btn-accent-custom">Siguiente</button>
+                                        <button type="submit" id="submitButton" class="btn btn-primary-custom d-none"
+                                            th:text="${matricula != null and matricula.idMatricula != null} ? 'Guardar cambios' : 'Confirmar Matrícula'">Confirmar
+                                            Matrícula</button>
                                     </div>
                                 </form>
                             </div>
@@ -397,33 +502,41 @@
                         <div class="card shadow-sm mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <span>Registro de Categorías</span>
-                                <button class="btn btn-sm btn-accent-custom" type="button" data-bs-toggle="collapse" data-bs-target="#categoriaFormContainer" aria-expanded="false" aria-controls="categoriaFormContainer">
+                                <button class="btn btn-sm btn-accent-custom" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#categoriaFormContainer" aria-expanded="false"
+                                    aria-controls="categoriaFormContainer">
                                     Registrar nueva categoría
                                 </button>
                             </div>
                             <div class="collapse mb-4" id="categoriaFormContainer">
                                 <div class="card card-body border-success">
-                                    <form th:action="@{/dashboard/categorias}" th:object="${newCategoria}" method="post">
+                                    <form th:action="@{/dashboard/categorias}" th:object="${newCategoria}"
+                                        method="post">
                                         <div class="row g-3">
                                             <div class="col-md-4">
                                                 <label class="form-label">Nombre categoría *</label>
-                                                <input type="text" class="form-control" th:field="*{nombreCategoria}" placeholder="Ej. sub-12" required />
+                                                <input type="text" class="form-control" th:field="*{nombreCategoria}"
+                                                    placeholder="Ej. sub-12" required />
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label">Edad mínima *</label>
-                                                <input type="number" min="1" class="form-control" th:field="*{edadMinima}" placeholder="10" required />
+                                                <input type="number" min="1" class="form-control"
+                                                    th:field="*{edadMinima}" placeholder="10" required />
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label">Edad máxima *</label>
-                                                <input type="number" min="1" class="form-control" th:field="*{edadMaxima}" placeholder="12" required />
+                                                <input type="number" min="1" class="form-control"
+                                                    th:field="*{edadMaxima}" placeholder="12" required />
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label">Monto *</label>
-                                                <input type="number" min="0" step="0.01" class="form-control" th:field="*{montoMatricula}" placeholder="100.00" required />
+                                                <input type="number" min="0" step="0.01" class="form-control"
+                                                    th:field="*{montoMatricula}" placeholder="100.00" required />
                                             </div>
                                             <div class="col-md-2">
                                                 <label class="form-label">Cupos *</label>
-                                                <input type="number" min="1" class="form-control" th:field="*{cuposTotales}" placeholder="20" required />
+                                                <input type="number" min="1" class="form-control"
+                                                    th:field="*{cuposTotales}" placeholder="20" required />
                                             </div>
                                         </div>
                                         <div class="mt-3 text-end">
@@ -448,11 +561,15 @@
                                         <tr th:each="categoria : ${categorias}">
                                             <td class="fw-bold" th:text="${categoria.idCategoria}"></td>
                                             <td th:text="${categoria.nombreCategoria}"></td>
-                                            <td><span th:text="${categoria.edadMinima}"></span> - <span th:text="${categoria.edadMaxima}"></span> años</td>
-                                            <td class="fw-bold text-success" th:text="'S/ ' + ${categoria.montoMatricula}"></td>
+                                            <td><span th:text="${categoria.edadMinima}"></span> - <span
+                                                    th:text="${categoria.edadMaxima}"></span> años</td>
+                                            <td class="fw-bold text-success"
+                                                th:text="'S/ ' + ${categoria.montoMatricula}"></td>
                                             <td th:text="${categoria.cuposTotales}"></td>
                                             <td>
-                                                <span class="badge" th:classappend="${categoria.cuposDisponibles > 5} ? 'bg-success' : 'bg-danger'" th:text="${categoria.cuposDisponibles}"></span>
+                                                <span class="badge"
+                                                    th:classappend="${categoria.cuposDisponibles > 5} ? 'bg-success' : 'bg-danger'"
+                                                    th:text="${categoria.cuposDisponibles}"></span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -468,12 +585,14 @@
                                 <form class="d-flex align-items-center gap-2" th:action="@{/dashboard}" method="get">
                                     <input type="hidden" name="entity" value="matriculas" />
                                     <input type="hidden" name="estado" th:value="${selectedEstado}" />
-                                    <input type="search" name="search" class="form-control form-control-sm" placeholder="Buscar por código o alumno" th:value="${search}" />
+                                    <input type="search" name="search" class="form-control form-control-sm"
+                                        placeholder="Buscar por código o alumno" th:value="${search}" />
                                     <button type="submit" class="btn btn-sm btn-secondary">Buscar</button>
                                 </form>
                             </div>
                             <div class="card-body py-2" th:if="${search != null and search != ''}">
-                                <div class="small text-muted">Resultados de búsqueda para: <strong th:text="${search}"></strong></div>
+                                <div class="small text-muted">Resultados de búsqueda para: <strong
+                                        th:text="${search}"></strong></div>
                             </div>
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
@@ -490,23 +609,31 @@
                                     <tbody>
                                         <tr th:each="matricula : ${matriculas}">
                                             <td class="fw-bold" th:text="${matricula.idMatricula}"></td>
-                                            <td class="text-monospace small" th:text="${matricula.codigoConstancia}"></td>
+                                            <td class="text-monospace small" th:text="${matricula.codigoConstancia}">
+                                            </td>
                                             <td th:text="${matricula.alumno.nombreCompleto}"></td>
                                             <td th:text="${matricula.categoria.nombreCategoria}"></td>
                                             <td>
-                                                <span class="badge" 
-                                                      th:classappend="${matricula.estado.name() == 'CONFIRMADA' ? 'bg-success' : (matricula.estado.name() == 'PENDIENTE' ? 'bg-warning text-dark' : 'bg-danger')}" 
-                                                      th:text="${matricula.estado}">
+                                                <span class="badge"
+                                                    th:classappend="${matricula.estado.name() == 'CONFIRMADA' ? 'bg-success' : (matricula.estado.name() == 'PENDIENTE' ? 'bg-warning text-dark' : 'bg-danger')}"
+                                                    th:text="${matricula.estado}">
                                                 </span>
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2 justify-content-center">
-                                                    <a th:href="@{/dashboard/registro/{id}/edit(id=${matricula.idMatricula})}" class="btn btn-sm btn-outline-primary">Editar</a>
-                                                    <form th:action="@{/dashboard/matriculas/{id}/confirm(id=${matricula.idMatricula})}" method="post" th:if="${matricula.estado.name() == 'PENDIENTE'}">
-                                                        <button type="submit" class="btn btn-sm btn-accent-custom">Confirmar</button>
+                                                    <a th:href="@{/dashboard/registro/{id}/edit(id=${matricula.idMatricula})}"
+                                                        class="btn btn-sm btn-outline-primary">Editar</a>
+                                                    <form
+                                                        th:action="@{/dashboard/matriculas/{id}/confirm(id=${matricula.idMatricula})}"
+                                                        method="post" th:if="${matricula.estado.name() == 'PENDIENTE'}">
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-accent-custom">Confirmar</button>
                                                     </form>
-                                                    <form th:action="@{/dashboard/matriculas/{id}/cancel(id=${matricula.idMatricula})}" method="post">
-                                                        <button type="submit" class="btn btn-sm btn-outline-danger" th:disabled="${matricula.estado.name() == 'ANULADA'}">Anular</button>
+                                                    <form
+                                                        th:action="@{/dashboard/matriculas/{id}/cancel(id=${matricula.idMatricula})}"
+                                                        method="post">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                            th:disabled="${matricula.estado.name() == 'ANULADA'}">Anular</button>
                                                     </form>
                                                 </div>
                                             </td>
@@ -537,7 +664,9 @@
                                             <td class="fw-bold text-success" th:text="'S/ ' + ${pago.monto}"></td>
                                             <td class="text-secondary small" th:text="${pago.metodoPago}"></td>
                                             <td>
-                                                <span class="badge" th:classappend="${pago.estadoPago.name() == 'PROCESADO' || pago.estadoPago.name() == 'APROBADO' ? 'bg-success' : 'bg-danger'}" th:text="${pago.estadoPago}"></span>
+                                                <span class="badge"
+                                                    th:classappend="${pago.estadoPago.name() == 'PROCESADO' || pago.estadoPago.name() == 'APROBADO' ? 'bg-success' : 'bg-danger'}"
+                                                    th:text="${pago.estadoPago}"></span>
                                             </td>
                                             <td th:text="${pago.fechaPago}"></td>
                                         </tr>
@@ -554,26 +683,33 @@
                                 <span class="badge bg-info text-dark">Filtros por fecha</span>
                             </div>
                             <div class="card-body">
-                                <form method="get" action="/dashboard/reportes-avanzados" class="row g-3 align-items-end">
+                                <form method="get" action="/dashboard/reportes-avanzados"
+                                    class="row g-3 align-items-end">
                                     <div class="col-md-3">
                                         <label class="form-label">Entidad</label>
                                         <select class="form-select" name="reportEntity">
-                                            <option value="matriculas" th:selected="${reportEntity == 'matriculas'}">Matrículas</option>
-                                            <option value="pagos" th:selected="${reportEntity == 'pagos'}">Pagos</option>
-                                            <option value="alumnos" th:selected="${reportEntity == 'alumnos'}">Alumnos</option>
-                                            <option value="categorias" th:selected="${reportEntity == 'categorias'}">Categorías</option>
+                                            <option value="matriculas" th:selected="${reportEntity == 'matriculas'}">
+                                                Matrículas</option>
+                                            <option value="pagos" th:selected="${reportEntity == 'pagos'}">Pagos
+                                            </option>
+                                            <option value="alumnos" th:selected="${reportEntity == 'alumnos'}">Alumnos
+                                            </option>
+                                            <option value="categorias" th:selected="${reportEntity == 'categorias'}">
+                                                Categorías</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Fecha inicio</label>
-                                        <input type="date" class="form-control" name="startDate" th:value="${startDate}" />
+                                        <input type="date" class="form-control" name="startDate"
+                                            th:value="${startDate}" />
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label">Fecha fin</label>
                                         <input type="date" class="form-control" name="endDate" th:value="${endDate}" />
                                     </div>
                                     <div class="col-md-3 text-end">
-                                        <button class="btn btn-primary-custom w-100" type="submit">Aplicar filtro</button>
+                                        <button class="btn btn-primary-custom w-100" type="submit">Aplicar
+                                            filtro</button>
                                     </div>
                                 </form>
                             </div>
@@ -582,7 +718,9 @@
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
                                 <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <a class="btn btn-accent-custom" th:href="@{/dashboard/report(entity=${reportEntity},format='pdf',startDate=${startDate},endDate=${endDate})}">Descargar PDF</a>
+                                    <a class="btn btn-accent-custom"
+                                        th:href="@{/dashboard/report(entity=${reportEntity},format='pdf',startDate=${startDate},endDate=${endDate})}">Descargar
+                                        PDF</a>
                                 </div>
                                 <div th:switch="${reportEntity}">
                                     <div th:case="'alumnos'">
@@ -687,17 +825,21 @@
                     </div>
 
                     <div th:case="*">
-                        <div class="alert alert-info border-0 shadow-sm">Selecciona una sección del menú superior para auditar la información disponible.</div>
+                        <div class="alert alert-info border-0 shadow-sm">Selecciona una sección del menú superior para
+                            auditar la información disponible.</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
     <script th:inline="javascript">
         const steps = ['step-1', 'step-2', 'step-3'];
         const serverStep = /*[[${showRegisterStep != null} ? ${showRegisterStep} : 0]]*/ 0;
+        // Modo edición: true si la matrícula ya existe
+        const isEditMode = /*[[${matricula != null and matricula.idMatricula != null}]]*/ false;
         let currentStep = serverStep;
 
         const nextStepButton = document.getElementById('nextStep');
@@ -720,6 +862,15 @@
         const summaryVuelto = document.getElementById('summaryVuelto');
         const vueltoField = document.getElementById('vueltoValue');
 
+        // En modo edición, ocultar las filas de pago del resumen
+        if (isEditMode) {
+            const hideRows = ['summaryMetodoRow', 'summaryMontoPagoRow', 'summaryVueltoRow'];
+            hideRows.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
+
         function showStep(index) {
             steps.forEach((stepId, idx) => {
                 const step = document.getElementById(stepId);
@@ -741,7 +892,7 @@
 
         function getEstimatedAmount() {
             if (!montoPreview || !montoPreview.value) return 0;
-            const raw = montoPreview.value.replace(/[^0-9.\-]/g, '');
+            const raw = montoPreview.value.replace(/[^0-9\.\-]/g, '');
             return raw ? parseFloat(raw) : 0;
         }
 
@@ -751,6 +902,7 @@
         }
 
         function updateVuelto() {
+            if (isEditMode) return; // No aplica en modo edición
             const expected = getEstimatedAmount();
             const entered = getEnteredAmount();
             const change = Math.max(0, entered - expected);
@@ -767,25 +919,28 @@
             const nombre = document.querySelector('[name="alumno.nombreCompleto"]').value;
             const dni = document.querySelector('[name="alumno.dni"]').value;
             const fecha = document.querySelector('[name="alumno.fechaNacimiento"]').value;
-            const categoriaText = categoriaSelect.options[categoriaSelect.selectedIndex]?.text || 'Auto por edad';
-            summaryAlumno.textContent = nombre || 'Sin nombre';
-            summaryDni.textContent = dni || 'Sin DNI';
-            summaryFecha.textContent = fecha || 'Sin fecha';
-            summaryCategoria.textContent = categoriaText;
-            summaryMonto.textContent = montoPreview.value;
-            summaryMetodo.textContent = metodoPagoInput ? metodoPagoInput.value || 'Sin método' : 'Sin método';
-            summaryMontoPago.textContent = montoPagoInput ? (montoPagoInput.value ? `S/ ${parseFloat(montoPagoInput.value).toFixed(2)}` : 'Sin monto') : 'Sin monto';
-            updateVuelto();
+            const categoriaText = categoriaSelect ? (categoriaSelect.options[categoriaSelect.selectedIndex]?.text || 'Auto por edad') : 'Auto por edad';
+            if (summaryAlumno) summaryAlumno.textContent = nombre || 'Sin nombre';
+            if (summaryDni) summaryDni.textContent = dni || 'Sin DNI';
+            if (summaryFecha) summaryFecha.textContent = fecha || 'Sin fecha';
+            if (summaryCategoria) summaryCategoria.textContent = categoriaText;
+            if (summaryMonto) summaryMonto.textContent = montoPreview ? montoPreview.value : 'S/ 0.00';
+            if (!isEditMode) {
+                if (summaryMetodo) summaryMetodo.textContent = metodoPagoInput ? metodoPagoInput.value || 'Sin método' : 'Sin método';
+                if (summaryMontoPago) summaryMontoPago.textContent = montoPagoInput ? (montoPagoInput.value ? `S/ ${parseFloat(montoPagoInput.value).toFixed(2)}` : 'Sin monto') : 'Sin monto';
+                updateVuelto();
+            }
         }
 
         function refreshMonto() {
+            if (!categoriaSelect) return;
             const selectedOption = categoriaSelect.options[categoriaSelect.selectedIndex];
             if (selectedOption && selectedOption.dataset.monto) {
                 montoPreview.value = `S/ ${parseFloat(selectedOption.dataset.monto).toFixed(2)}`;
             } else {
                 montoPreview.value = 'Auto asignado por edad';
             }
-            updateVuelto();
+            if (!isEditMode) updateVuelto();
         }
 
         function calculateAge(birthDateValue) {
@@ -801,16 +956,10 @@
         }
 
         function autoSelectCategoriaByBirthdate() {
-            if (!fechaNacimientoInput || !categoriaSelect) {
-                return;
-            }
-            if (categoriaSelect.value && categoriaSelect.value.trim() !== '') {
-                return;
-            }
+            if (!fechaNacimientoInput || !categoriaSelect) return;
+            if (categoriaSelect.value && categoriaSelect.value.trim() !== '') return;
             const age = calculateAge(fechaNacimientoInput.value);
-            if (age === null || age < 0) {
-                return;
-            }
+            if (age === null || age < 0) return;
             let matchedOption = null;
             for (const option of categoriaSelect.options) {
                 const min = parseInt(option.dataset.minima);
@@ -845,7 +994,8 @@
                     return false;
                 }
             }
-            if (stepIndex === 1 && montoPagoInput) {
+            // Validar monto solo en modo registro
+            if (!isEditMode && stepIndex === 1 && montoPagoInput) {
                 const expected = getEstimatedAmount();
                 const entered = getEnteredAmount();
                 if (entered < expected) {
@@ -860,10 +1010,8 @@
 
         if (nextStepButton) {
             nextStepButton.addEventListener('click', () => {
-                if (!validateStep(currentStep)) {
-                    return;
-                }
-                if (currentStep === 0) {
+                if (!validateStep(currentStep)) return;
+                if (currentStep === 0 && !isEditMode) {
                     autoSelectCategoriaByBirthdate();
                 }
                 if (currentStep < steps.length - 1) {
@@ -882,6 +1030,7 @@
         }
         if (categoriaSelect) {
             categoriaSelect.addEventListener('change', refreshMonto);
+            // Al cargar la página, si hay categoría preseleccionada, actualizar el monto
             refreshMonto();
         }
         if (montoPagoInput) {
@@ -890,9 +1039,12 @@
         if (fechaNacimientoInput) {
             const today = new Date().toISOString().split('T')[0];
             fechaNacimientoInput.setAttribute('max', today);
-            fechaNacimientoInput.addEventListener('change', autoSelectCategoriaByBirthdate);
+            if (!isEditMode) {
+                fechaNacimientoInput.addEventListener('change', autoSelectCategoriaByBirthdate);
+            }
         }
         showStep(currentStep);
     </script>
 </body>
+
 </html>
