@@ -84,8 +84,8 @@
                                         <input type="email" class="form-control"
                                             th:field="*{alumno.correoTutor}" placeholder="correo@ejemplo.com"
                                             maxlength="100" required
-                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                                            title="Por favor ingresa un correo válido con dominio (ej: usuario@gmail.com)"
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$"
+                                            title="El correo debe cumplir con el formato estándar (ejemplo: ads@asd.asd)"
                                             th:classappend="${#fields.hasErrors('alumno.correoTutor')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.correoTutor')}"
@@ -395,6 +395,22 @@
             
             // Validaciones avanzadas del Paso 1
             if (stepIndex === 0) {
+
+                const correoInput = document.querySelector('[name="alumno.correoTutor"]');
+                if (correoInput) {
+                    const correoValue = correoInput.value.trim();
+                    // Expresión regular idéntica a la de Java (ads@asd.asd)
+                    const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                    
+                    if (!regexCorreo.test(correoValue)) {
+                        correoInput.setCustomValidity('El correo debe cumplir con el formato estándar (ejemplo: ads@asd.asd)');
+                        correoInput.reportValidity();
+                        correoInput.setCustomValidity(''); // Limpia el estado para futuras evaluaciones
+                        alert('¡Formato de correo inválido!\n\nPor favor, ingresa un correo electrónico completo que incluya su extensión.\nEjemplo correcto: ads@asd.asd');
+                        return false; // Bloquea el avance al paso 2
+                    }
+                }
+
                 if (fechaNacimientoInput && fechaNacimientoInput.value) {
                     const selectedDate = new Date(fechaNacimientoInput.value);
                     const today = new Date();
@@ -430,6 +446,7 @@
                         montoPagoInput.setCustomValidity('El monto ingresado no puede ser 0 o vacío.');
                         montoPagoInput.reportValidity();
                         montoPagoInput.setCustomValidity('');
+                        alert('¡Monto inválido!\n\nEl monto ingresado debe ser un número mayor a 0. Por favor, corrige el monto antes de continuar.');
                         return false;
                     }
                     
@@ -437,6 +454,7 @@
                         montoPagoInput.setCustomValidity('El monto ingresado debe ser igual o mayor al monto estimado.');
                         montoPagoInput.reportValidity();
                         montoPagoInput.setCustomValidity('');
+                        alert('¡Monto insuficiente!\n\nEl monto ingresado debe ser igual o mayor al monto estimado. Por favor, corrige el monto antes de continuar.');
                         return false;
                     }
                 }

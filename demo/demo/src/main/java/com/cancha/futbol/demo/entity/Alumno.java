@@ -51,6 +51,10 @@ public class Alumno {
     @NotBlank(message = "El correo del tutor es obligatorio")
     @Email(message = "El correo del tutor debe ser un correo válido")
     @Size(max = 100, message = "El correo del tutor no puede superar 100 caracteres")
+    @Pattern(
+        regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$",
+        message = "El correo debe tener una estructura válida (ejemplo: ads@asd.asd)"
+    )
     @Column(nullable = false, length = 100)
     private String correoTutor;
 }
