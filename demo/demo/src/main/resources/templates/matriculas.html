@@ -55,6 +55,8 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2 justify-content-center">
+                                            <a th:href="@{/dashboard/registro/print/{id}(id=${matricula.idMatricula})}"
+                                                class="btn btn-sm btn-outline-success">Ver</a>
                                             <a th:href="@{/dashboard/registro/{id}/edit(id=${matricula.idMatricula})}"
                                                 class="btn btn-sm btn-outline-primary">Editar</a>
                                             <form
