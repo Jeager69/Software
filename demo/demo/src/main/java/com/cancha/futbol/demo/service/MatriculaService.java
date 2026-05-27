@@ -183,14 +183,41 @@ public class MatriculaService {
             throw new ResourceNotFoundException("Alumno es requerido para la matricula");
         }
         if (alumno.getIdAlumno() != null) {
-            return alumnoRepo.findById(alumno.getIdAlumno())
+            Alumno existing = alumnoRepo.findById(alumno.getIdAlumno())
                     .orElseThrow(() -> new ResourceNotFoundException("Alumno no encontrado para matricula"));
+            copyAlumnoFields(existing, alumno);
+            return alumnoRepo.save(existing);
         }
         if (alumno.getDni() != null && !alumno.getDni().isBlank()) {
             return alumnoRepo.findByDni(alumno.getDni())
+                    .map(existing -> {
+                        copyAlumnoFields(existing, alumno);
+                        return alumnoRepo.save(existing);
+                    })
                     .orElseGet(() -> alumnoRepo.save(alumno));
         }
         return alumnoRepo.save(alumno);
+    }
+
+    private void copyAlumnoFields(Alumno target, Alumno source) {
+        if (source.getNombreCompleto() != null) {
+            target.setNombreCompleto(source.getNombreCompleto());
+        }
+        if (source.getDni() != null) {
+            target.setDni(source.getDni());
+        }
+        if (source.getFechaNacimiento() != null) {
+            target.setFechaNacimiento(source.getFechaNacimiento());
+        }
+        if (source.getNombreTutor() != null) {
+            target.setNombreTutor(source.getNombreTutor());
+        }
+        if (source.getTelefonoTutor() != null) {
+            target.setTelefonoTutor(source.getTelefonoTutor());
+        }
+        if (source.getCorreoTutor() != null) {
+            target.setCorreoTutor(source.getCorreoTutor());
+        }
     }
 
     public void delete(Long id) {

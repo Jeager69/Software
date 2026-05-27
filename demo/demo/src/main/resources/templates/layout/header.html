@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm" xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/dashboard">
+            <span class="fs-4 fw-bold">⚽ Academia Fútbol</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link"
+                        th:classappend="${entity == 'dashboard' || entity == null} ? ' active'"
+                        href="/dashboard">Resumen</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'alumnos'} ? ' active'"
+                        href="/dashboard/alumnos">Alumnos</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'categorias'} ? ' active'"
+                        href="/dashboard/categorias">Categorías</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'matriculas'} ? ' active'"
+                        href="/dashboard/matriculas">Matrículas</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'pagos'} ? ' active'"
+                        href="/dashboard/pagos">Pagos</a></li>
+                <li class="nav-item"><a class="nav-link" th:classappend="${entity == 'reportes'} ? ' active'"
+                        href="/dashboard/reportes">Reportes avanzados</a></li>
+            </ul>
+            <form class="d-flex" action="/logout" method="post">
+                <button class="btn btn-outline-light btn-sm" type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>

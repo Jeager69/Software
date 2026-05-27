@@ -14,6 +14,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name = "pago")
@@ -38,6 +39,7 @@ public class Pago {
 
     @OneToOne
     @JoinColumn(name = "id_matricula")
+    @ToString.Exclude
     private Matricula matricula;
 }
 

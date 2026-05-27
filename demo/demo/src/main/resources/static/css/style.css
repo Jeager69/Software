@@ -1,0 +1,74 @@
+:root {
+    --verde-principal: #1b5e20;
+    /* El verde oscuro del encabezado de tus diapositivas */
+    --verde-hover: #144317;
+    --verde-suave: #e8f5e9;
+    --amarillo-acento: #ffb300;
+    /* El naranja/amarillo de los botones y alertas */
+    --amarillo-hover: #ff8f00;
+    --texto-oscuro: #212529;
+}
+
+/* Sobrescribir barra de navegación */
+.navbar-custom {
+    background-color: var(--verde-principal) !important;
+    border-bottom: 4px solid var(--amarillo-acento);
+}
+
+.navbar-custom .nav-link.active {
+    color: var(--amarillo-acento) !important;
+    font-weight: bold;
+}
+
+/* Tarjetas (Cards) estilo institucional */
+.card {
+    border: 1px solid rgba(27, 94, 32, 0.15);
+    border-radius: 8px;
+}
+
+.card-header {
+    background-color: var(--verde-suave) !important;
+    color: var(--verde-principal) !important;
+    border-bottom: 1px solid rgba(27, 94, 32, 0.15);
+    font-weight: 600;
+}
+
+/* Badges e indicadores numéricos */
+.badge-custom {
+    background-color: var(--verde-principal) !important;
+    color: #ffffff !important;
+}
+
+/* Botones personalizados */
+.btn-primary-custom {
+    background-color: var(--verde-principal) !important;
+    border-color: var(--verde-principal) !important;
+    color: white !important;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--verde-hover) !important;
+}
+
+.btn-accent-custom {
+    background-color: var(--amarillo-acento) !important;
+    border-color: var(--amarillo-acento) !important;
+    color: var(--texto-oscuro) !important;
+    font-weight: 500;
+}
+
+.btn-accent-custom:hover {
+    background-color: var(--amarillo-hover) !important;
+    color: var(--texto-oscuro) !important;
+}
+
+/* Estilos de tablas */
+.table thead th {
+    background-color: var(--verde-principal);
+    color: white;
+    font-weight: 500;
+}
+
+.table-hover tbody tr:hover {
+    background-color: var(--verde-suave);
+}

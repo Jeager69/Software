@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
+<div class="col-lg-3 mb-4">
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header">
+            Resumen rápido
+        </div>
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush border-0">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Alumnos
+                    <span class="badge badge-custom rounded-pill" th:text="${alumnoCount}">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Categorías
+                    <span class="badge badge-custom rounded-pill" th:text="${categoriaCount}">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Matrículas
+                    <span class="badge badge-custom rounded-pill" th:text="${matriculaCount}">0</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Pagos
+                    <span class="badge badge-custom rounded-pill" th:text="${pagoCount}">0</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            Reportes
+        </div>
+        <div class="card-body">
+            <div class="d-grid gap-2">
+                <a class="btn btn-outline-secondary"
+                    th:href="@{/dashboard/report(entity='alumnos',format='pdf')}">Exportar Alumnos en
+                    PDF</a>
+                <a class="btn btn-outline-secondary"
+                    th:href="@{/dashboard/report(entity='categorias',format='pdf')}">Exportar Categorías en
+                    PDF</a>
+                <a class="btn btn-outline-secondary"
+                    th:href="@{/dashboard/report(entity='matriculas',format='pdf')}">Exportar Matrículas en
+                    PDF</a>
+                <a class="btn btn-outline-secondary"
+                    th:href="@{/dashboard/report(entity='pagos',format='pdf')}">Exportar Pagos en PDF</a>
+            </div>
+        </div>
+    </div>
+</div>

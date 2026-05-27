@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,41 +61,74 @@ public class AdminDashboardController {
     }
 
     @GetMapping
-    public String dashboard(@RequestParam(required = false) String entity,
-            @RequestParam(required = false) EstadoMatricula estado,
-            @RequestParam(required = false) String search,
-            Model model) {
+    public String dashboard(Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
+        model.addAttribute("entity", "dashboard");
+        return "dashboard-main";
+    }
+
+    @GetMapping("/alumnos")
+    public String showAlumnos(Model model) {
         model.addAttribute("alumnoCount", alumnoRepo.count());
         model.addAttribute("categoriaCount", categoriaRepo.count());
         model.addAttribute("matriculaCount", matriculaRepo.count());
         model.addAttribute("pagoCount", pagoRepo.count());
         model.addAttribute("alumnos", alumnoRepo.findAll());
-        model.addAttribute("categorias", categoriaRepo.findAll());
-        model.addAttribute("pagos", pagoRepo.findAll());
-        model.addAttribute("entity", entity == null ? "dashboard" : entity);
-        model.addAttribute("estadoOptions", EstadoMatricula.values());
-        model.addAttribute("selectedEstado", estado);
-        model.addAttribute("search", search);
+        model.addAttribute("entity", "alumnos");
+        return "alumnos";
+    }
 
-        if (entity != null && entity.equals("matriculas")) {
-            if (search != null && !search.isBlank()) {
-                if (estado != null) {
-                    model.addAttribute("matriculas", matriculaRepo.searchByEstado(estado, search.trim()));
-                } else {
-                    model.addAttribute("matriculas", matriculaRepo.search(search.trim()));
-                }
-            } else if (estado != null) {
-                model.addAttribute("matriculas", matriculaRepo.findByEstado(estado));
+    @GetMapping("/categorias")
+    public String showCategorias(Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
+        model.addAttribute("categorias", categoriaRepo.findAll());
+        model.addAttribute("entity", "categorias");
+        return "categorias";
+    }
+
+    @GetMapping("/matriculas")
+    public String showMatriculas(@RequestParam(required = false) String search,
+            @RequestParam(required = false) EstadoMatricula estado,
+            Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
+
+        if (search != null && !search.isBlank()) {
+            if (estado != null) {
+                model.addAttribute("matriculas", matriculaRepo.searchByEstado(estado, search.trim()));
             } else {
-                model.addAttribute("matriculas", matriculaRepo.findAll());
+                model.addAttribute("matriculas", matriculaRepo.search(search.trim()));
             }
+        } else if (estado != null) {
+            model.addAttribute("matriculas", matriculaRepo.findByEstado(estado));
         } else {
             model.addAttribute("matriculas", matriculaRepo.findAll());
         }
-        return "dashboard";
+        model.addAttribute("search", search);
+        model.addAttribute("entity", "matriculas");
+        return "matriculas";
     }
 
-    @GetMapping("/reportes-avanzados")
+    @GetMapping("/pagos")
+    public String showPagos(Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
+        model.addAttribute("pagos", pagoRepo.findAll());
+        model.addAttribute("entity", "pagos");
+        return "pagos";
+    }
+
+    @GetMapping("/reportes")
     public String advancedReports(@RequestParam(required = false, defaultValue = "matriculas") String reportEntity,
                                   @RequestParam(required = false) LocalDate startDate,
                                   @RequestParam(required = false) LocalDate endDate,
@@ -105,15 +137,10 @@ public class AdminDashboardController {
         model.addAttribute("categoriaCount", categoriaRepo.count());
         model.addAttribute("matriculaCount", matriculaRepo.count());
         model.addAttribute("pagoCount", pagoRepo.count());
-        model.addAttribute("alumnos", alumnoRepo.findAll());
-        model.addAttribute("categorias", categoriaRepo.findAll());
-        model.addAttribute("pagos", pagoRepo.findAll());
         model.addAttribute("entity", "reportes");
         model.addAttribute("reportEntity", reportEntity);
         model.addAttribute("startDate", startDate);
         model.addAttribute("endDate", endDate);
-        model.addAttribute("estadoOptions", EstadoMatricula.values());
-        model.addAttribute("selectedEstado", null);
 
         switch (reportEntity) {
             case "alumnos" -> model.addAttribute("reportAlumnos", getAlumnosForRange(startDate, endDate));
@@ -121,7 +148,7 @@ public class AdminDashboardController {
             case "pagos" -> model.addAttribute("reportPagos", getPagosForRange(startDate, endDate));
             default -> model.addAttribute("reportMatriculas", getMatriculasForRange(startDate, endDate));
         }
-        return "dashboard";
+        return "reporte";
     }
 
     @GetMapping("/report")
@@ -370,23 +397,27 @@ public class AdminDashboardController {
 
     @GetMapping("/registro")
     public String showRegistroForm(Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
         model.addAttribute("entity", "registro");
         model.addAttribute("matricula", new Matricula());
         model.addAttribute("categorias", categoriaRepo.findAll());
-        model.addAttribute("selectedEstado", null);
-        model.addAttribute("estadoOptions", EstadoMatricula.values());
-        return "dashboard";
+        return "registro";
     }
 
     @GetMapping("/registro/{id}/edit")
     public String editRegistro(@PathVariable Long id, Model model) {
+        model.addAttribute("alumnoCount", alumnoRepo.count());
+        model.addAttribute("categoriaCount", categoriaRepo.count());
+        model.addAttribute("matriculaCount", matriculaRepo.count());
+        model.addAttribute("pagoCount", pagoRepo.count());
         Matricula matricula = matriculaService.getById(id);
         model.addAttribute("entity", "registro");
         model.addAttribute("matricula", matricula);
         model.addAttribute("categorias", categoriaRepo.findAll());
-        model.addAttribute("selectedEstado", null);
-        model.addAttribute("estadoOptions", EstadoMatricula.values());
-        return "dashboard";
+        return "registro";
     }
 
     @PostMapping("/categorias")
@@ -395,7 +426,7 @@ public class AdminDashboardController {
             categoria.setCuposDisponibles(categoria.getCuposTotales());
         }
         categoriaRepo.save(categoria);
-        return "redirect:/dashboard?entity=categorias";
+        return "redirect:/dashboard/categorias";
     }
 
     @PostMapping("/registro")
@@ -405,19 +436,20 @@ public class AdminDashboardController {
             @RequestParam(required = false) Double montoPago,
             Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("alumnoCount", alumnoRepo.count());
+            model.addAttribute("categoriaCount", categoriaRepo.count());
+            model.addAttribute("matriculaCount", matriculaRepo.count());
+            model.addAttribute("pagoCount", pagoRepo.count());
             model.addAttribute("entity", "registro");
             model.addAttribute("categorias", categoriaRepo.findAll());
-            model.addAttribute("selectedEstado", null);
-            model.addAttribute("estadoOptions", EstadoMatricula.values());
-            model.addAttribute("showRegisterStep", 0);
             model.addAttribute("registroError", "Corrige los campos marcados en el formulario.");
             model.addAttribute("formErrors", bindingResult.getAllErrors());
-            return "dashboard";
+            return "registro";
         }
 
         if (matricula.getIdMatricula() != null) {
             matriculaService.update(matricula.getIdMatricula(), matricula);
-            return "redirect:/dashboard?entity=matriculas";
+            return "redirect:/dashboard/matriculas";
         }
 
         double montoEstimado = 0.0;
@@ -440,24 +472,26 @@ public class AdminDashboardController {
         }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("alumnoCount", alumnoRepo.count());
+            model.addAttribute("categoriaCount", categoriaRepo.count());
+            model.addAttribute("matriculaCount", matriculaRepo.count());
+            model.addAttribute("pagoCount", pagoRepo.count());
             model.addAttribute("entity", "registro");
             model.addAttribute("categorias", categoriaRepo.findAll());
-            model.addAttribute("selectedEstado", null);
-            model.addAttribute("estadoOptions", EstadoMatricula.values());
-            model.addAttribute("showRegisterStep", 1);
             model.addAttribute("registroError", "Corrige los campos marcados en el formulario.");
             model.addAttribute("formErrors", bindingResult.getAllErrors());
-            return "dashboard";
+            return "registro";
         }
 
         if (montoPago == null || montoPago < montoEstimado) {
+            model.addAttribute("alumnoCount", alumnoRepo.count());
+            model.addAttribute("categoriaCount", categoriaRepo.count());
+            model.addAttribute("matriculaCount", matriculaRepo.count());
+            model.addAttribute("pagoCount", pagoRepo.count());
             model.addAttribute("entity", "registro");
             model.addAttribute("categorias", categoriaRepo.findAll());
-            model.addAttribute("selectedEstado", null);
-            model.addAttribute("estadoOptions", EstadoMatricula.values());
             model.addAttribute("montoError", "El monto ingresado debe ser igual o mayor al monto estimado.");
-            model.addAttribute("showRegisterStep", 1);
-            return "dashboard";
+            return "registro";
         }
 
         Matricula created = matriculaService.create(matricula);
@@ -488,12 +522,12 @@ public class AdminDashboardController {
     @PostMapping("/matriculas/{id}/confirm")
     public String confirmMatricula(@PathVariable Long id) {
         matriculaService.confirm(id);
-        return "redirect:/dashboard?entity=matriculas";
+        return "redirect:/dashboard/matriculas";
     }
 
     @PostMapping("/matriculas/{id}/cancel")
     public String cancelMatricula(@PathVariable Long id) {
         matriculaService.cancel(id);
-        return "redirect:/dashboard?entity=matriculas";
+        return "redirect:/dashboard/matriculas";
     }
 }
