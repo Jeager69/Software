@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
+import java.util.UUID; // 👈 Importante para el código único
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +69,10 @@ public class MatriculaService {
         m.setCategoria(categoriaToUse);
         m.setEstado(EstadoMatricula.ACTIVA);
         m.setReservationExpiry(null);
+
+        // 🌟 NUEVO: Asignar código de constancia único al crear
+        m.setCodigoConstancia(generarCodigoUnico());
+
         return repo.save(m);
     }
 
@@ -97,6 +102,10 @@ public class MatriculaService {
         m.setCategoria(categoriaToUse);
         m.setEstado(EstadoMatricula.PENDIENTE);
         m.setReservationExpiry(LocalDateTime.now().plusMinutes(minutes));
+
+        // 🌟 NUEVO: Asignar código también si entra como reserva inicial
+        m.setCodigoConstancia(generarCodigoUnico());
+
         return repo.save(m);
     }
 
@@ -175,6 +184,10 @@ public class MatriculaService {
         if (m.getEstado() != null) {
             exist.setEstado(m.getEstado());
         }
+
+        // 💡 NOTA: No modificamos el campo 'exist.setCodigoConstancia(...)'.
+        // Debido a que 'exist' viene directo de la BD, conservará su string de origen intacto.
+
         return repo.save(exist);
     }
 
@@ -223,5 +236,15 @@ public class MatriculaService {
     public void delete(Long id) {
         Matricula exist = getById(id);
         repo.delete(exist);
+    }
+
+    /**
+     * 🛠️ Generador interno de código de constancia único
+     * Retorna una estructura limpia: MAT-2026-XXXX (Longitud apróx: 17 caracteres)
+     */
+    private String generarCodigoUnico() {
+        String añoActual = String.valueOf(LocalDate.now().getYear()); // "2026"
+        String randomHex = UUID.randomUUID().toString().substring(0, 5).toUpperCase(); // 5 alfanuméricos únicos
+        return "MAT-" + añoActual + "-" + randomHex;
     }
 }

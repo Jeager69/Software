@@ -26,7 +26,7 @@ public class Matricula {
     private Long idMatricula;
     
     @Size(max = 50, message = "El código de constancia no puede superar 50 caracteres")
-    @Column(length = 50)
+    @Column(name = "codigo_constancia", length = 50, updatable = false)
     private String codigoConstancia;
 
     private LocalDateTime fechaMatricula = LocalDateTime.now();

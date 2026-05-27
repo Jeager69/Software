@@ -39,6 +39,7 @@
                             </div>
                             <input type="hidden" th:field="*{idMatricula}" />
                             <input type="hidden" th:field="*{alumno.idAlumno}" />
+                            
                             <div id="step-1">
                                 <h5 class="mb-3">Paso 1 - Datos del Alumno</h5>
                                 <div class="row g-3">
@@ -47,6 +48,8 @@
                                         <input type="text" class="form-control"
                                             th:field="*{alumno.nombreCompleto}"
                                             placeholder="Ej. Juan Pérez Ríos" maxlength="100" required
+                                            pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'\-]+$"
+                                            title="El nombre no debe contener números ni caracteres especiales."
                                             th:classappend="${#fields.hasErrors('alumno.nombreCompleto')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.nombreCompleto')}"
@@ -54,9 +57,10 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">DNI / Documento *</label>
-                                        <input type="text" inputmode="numeric" pattern="[0-9]{8}" maxlength="8"
+                                        <input type="text" inputmode="numeric" pattern="(?!0{8})[0-9]{8}" maxlength="8"
                                             class="form-control" th:field="*{alumno.dni}" placeholder="12345678"
                                             required
+                                            title="El DNI debe tener 8 dígitos numéricos y no puede ser todo ceros."
                                             th:readonly="${matricula != null and matricula.idMatricula != null}"
                                             th:classappend="${(matricula != null and matricula.idMatricula != null) ? 'bg-light text-muted' : ''} + ' ' + (${#fields.hasErrors('alumno.dni')} ? ' is-invalid' : '')"
                                             th:required="${matricula == null or matricula.idMatricula == null}" />
@@ -69,7 +73,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label">Fecha de nacimiento *</label>
                                         <input type="date" class="form-control"
-                                            th:field="*{alumno.fechaNacimiento}" required
+                                            th:field="*{alumno.fechaNacimiento}" required max="9999-12-31"
                                             th:classappend="${#fields.hasErrors('alumno.fechaNacimiento')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.fechaNacimiento')}"
@@ -80,25 +84,30 @@
                                         <input type="email" class="form-control"
                                             th:field="*{alumno.correoTutor}" placeholder="correo@ejemplo.com"
                                             maxlength="100" required
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            title="Por favor ingresa un correo válido con dominio (ej: usuario@gmail.com)"
                                             th:classappend="${#fields.hasErrors('alumno.correoTutor')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.correoTutor')}"
                                             th:errors="*{alumno.correoTutor}"></div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Nombre del tutor</label>
+                                        <label class="form-label">Nombre del tutor *</label>
                                         <input type="text" class="form-control" th:field="*{alumno.nombreTutor}"
                                             placeholder="Nombre del tutor" maxlength="100" required
+                                            pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'\-]+$"
+                                            title="El nombre del tutor no debe contener números."
                                             th:classappend="${#fields.hasErrors('alumno.nombreTutor')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.nombreTutor')}"
                                             th:errors="*{alumno.nombreTutor}"></div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Teléfono del tutor</label>
-                                        <input type="tel" inputmode="numeric" pattern="^$|[0-9]{9}"
+                                        <label class="form-label">Teléfono del tutor *</label>
+                                        <input type="tel" inputmode="numeric" pattern="(?!0{9})[0-9]{9}"
                                             maxlength="9" class="form-control"
                                             th:field="*{alumno.telefonoTutor}" placeholder="999999999" required
+                                            title="El teléfono debe tener 9 dígitos y no ser puror ceros."
                                             th:classappend="${#fields.hasErrors('alumno.telefonoTutor')} ? ' is-invalid'" />
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('alumno.telefonoTutor')}"
@@ -106,6 +115,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div id="step-2" class="d-none">
                                 <h5 class="mb-3">Paso 2 - Categoría y Pago</h5>
                                 <div class="row g-3">
@@ -130,7 +140,6 @@
                                             value="S/ 0.00" />
                                     </div>
 
-                                    <!-- Sección de pago: solo visible al REGISTRAR, no al EDITAR -->
                                     <div th:if="${matricula == null or matricula.idMatricula == null}"
                                         class="col-12">
                                         <div class="row g-3">
@@ -138,8 +147,7 @@
                                                 <label class="form-label">Método de pago *</label>
                                                 <select class="form-select" name="metodoPago" id="metodoPago"
                                                     required>
-                                                    <option value="" disabled selected>Seleccionar método
-                                                    </option>
+                                                    <option value="" disabled selected>Seleccionar método</option>
                                                     <option value="Efectivo">Efectivo</option>
                                                     <option value="Tarjeta">Tarjeta</option>
                                                     <option value="Transferencia">Transferencia</option>
@@ -148,7 +156,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Monto ingresado *</label>
-                                                <input type="number" step="0.01" min="0" class="form-control"
+                                                <input type="number" step="0.01" min="0.01" class="form-control"
                                                     name="montoPago" id="montoPago" placeholder="Ej. 150.00"
                                                     required />
                                             </div>
@@ -164,7 +172,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Información de pago ya registrado (solo en modo EDITAR) -->
                                     <div th:if="${matricula != null and matricula.idMatricula != null}"
                                         class="col-12">
                                         <div class="alert alert-info d-flex align-items-start gap-2 mb-0"
@@ -176,11 +183,11 @@
                                                 pueden cambiarse desde esta pantalla.
                                             </div>
                                         </div>
-                                        <!-- Campos ocultos para que el formulario no requiera pago en edición -->
                                         <input type="hidden" name="metodoPago" value="" />
                                     </div>
                                 </div>
                             </div>
+                            
                             <div id="step-3" class="d-none">
                                 <h5 class="mb-3">Paso 3 - Confirmación</h5>
                                 <div class="card border-success mb-4">
@@ -200,7 +207,6 @@
                                         <div class="mb-3">
                                             <strong>Monto estimado:</strong> <span id="summaryMonto"></span>
                                         </div>
-                                        <!-- Resumen de pago: solo en modo registro -->
                                         <div class="mb-3" id="summaryMetodoRow">
                                             <strong>Método de pago:</strong> <span id="summaryMetodo"></span>
                                         </div>
@@ -211,8 +217,7 @@
                                         <div class="mb-3" id="summaryVueltoRow">
                                             <strong>Vuelto:</strong> <span id="summaryVuelto"></span>
                                         </div>
-                                        <p class="mb-0 text-success">Al confirmar, los cambios quedarán
-                                            guardados.</p>
+                                        <p class="mb-0 text-success">Al confirmar, los cambios quedarán guardados.</p>
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +322,7 @@
             const nombre = document.querySelector('[name="alumno.nombreCompleto"]').value;
             const dni = document.querySelector('[name="alumno.dni"]').value;
             const fecha = document.querySelector('[name="alumno.fechaNacimiento"]').value;
-            const categoriaText = categoriaSelect ? (categoriaSelect.options[categoriaSelect.selectedIndex]?.text || 'Auto por edad') : 'Auto por edad';
+            const categoriaText = categoriaSelect ? (categoriaSelect.options[categoriaSelect.selectedIndex]?.text || 'No seleccionada') : 'No seleccionada';
             if (summaryAlumno) summaryAlumno.textContent = nombre || 'Sin nombre';
             if (summaryDni) summaryDni.textContent = dni || 'Sin DNI';
             if (summaryFecha) summaryFecha.textContent = fecha || 'Sin fecha';
@@ -333,10 +338,10 @@
         function refreshMonto() {
             if (!categoriaSelect) return;
             const selectedOption = categoriaSelect.options[categoriaSelect.selectedIndex];
-            if (selectedOption && selectedOption.dataset.monto) {
+            if (selectedOption && selectedOption.value !== "") {
                 montoPreview.value = `S/ ${parseFloat(selectedOption.dataset.monto).toFixed(2)}`;
             } else {
-                montoPreview.value = 'Auto asignado por edad';
+                montoPreview.value = 'S/ 0.00';
             }
             if (!isEditMode) updateVuelto();
         }
@@ -355,9 +360,10 @@
 
         function autoSelectCategoriaByBirthdate() {
             if (!fechaNacimientoInput || !categoriaSelect) return;
-            if (categoriaSelect.value && categoriaSelect.value.trim() !== '') return;
+            // Se quita la condición previa para que se recalcule si cambia la fecha
             const age = calculateAge(fechaNacimientoInput.value);
-            if (age === null || age < 0) return;
+            if (age === null || age < 0 || age > 120) return; // Validación de rango de edad lógico
+            
             let matchedOption = null;
             for (const option of categoriaSelect.options) {
                 const min = parseInt(option.dataset.minima);
@@ -369,37 +375,70 @@
             }
             if (matchedOption) {
                 categoriaSelect.value = matchedOption.value;
-                refreshMonto();
+            } else {
+                categoriaSelect.value = ""; // Si no hay match, vuelve a pedir selección externa
             }
+            refreshMonto();
         }
 
         function validateStep(stepIndex) {
             const step = document.getElementById(steps[stepIndex]);
             if (!step) return true;
             const fields = Array.from(step.querySelectorAll('input, select, textarea')).filter(el => el.offsetParent !== null);
+            
             for (const field of fields) {
                 if (!field.checkValidity()) {
                     field.reportValidity();
                     return false;
                 }
             }
-            if (stepIndex === 0 && fechaNacimientoInput && fechaNacimientoInput.value) {
-                const selectedDate = new Date(fechaNacimientoInput.value);
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                if (selectedDate > today) {
-                    alert('La fecha de nacimiento no puede ser una fecha futura.');
-                    return false;
+            
+            // Validaciones avanzadas del Paso 1
+            if (stepIndex === 0) {
+                if (fechaNacimientoInput && fechaNacimientoInput.value) {
+                    const selectedDate = new Date(fechaNacimientoInput.value);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (selectedDate > today) {
+                        alert('La fecha de nacimiento no puede ser una fecha futura.');
+                        return false;
+                    }
+                    
+                    // Detener si el año es ridículamente largo (Ej. 202444) antes de enviar a DB
+                    if (selectedDate.getFullYear() > 9999) {
+                        alert('Por favor, introduce un año válido de 4 dígitos.');
+                        return false;
+                    }
                 }
             }
-            if (!isEditMode && stepIndex === 1 && montoPagoInput) {
-                const expected = getEstimatedAmount();
-                const entered = getEnteredAmount();
-                if (entered < expected) {
-                    montoPagoInput.setCustomValidity('El monto ingresado debe ser igual o mayor al monto estimado.');
-                    montoPagoInput.reportValidity();
-                    montoPagoInput.setCustomValidity('');
+            
+            // Validaciones avanzadas del Paso 2
+            if (stepIndex === 1) {
+                if (categoriaSelect && categoriaSelect.value === "") {
+                    categoriaSelect.setCustomValidity('Debe seleccionar una categoría válida obligatoriamente.');
+                    categoriaSelect.reportValidity();
+                    categoriaSelect.setCustomValidity('');
                     return false;
+                }
+                
+                if (!isEditMode && montoPagoInput) {
+                    const expected = getEstimatedAmount();
+                    const entered = getEnteredAmount();
+                    
+                    if (entered <= 0) {
+                        montoPagoInput.setCustomValidity('El monto ingresado no puede ser 0 o vacío.');
+                        montoPagoInput.reportValidity();
+                        montoPagoInput.setCustomValidity('');
+                        return false;
+                    }
+                    
+                    if (entered < expected) {
+                        montoPagoInput.setCustomValidity('El monto ingresado debe ser igual o mayor al monto estimado.');
+                        montoPagoInput.reportValidity();
+                        montoPagoInput.setCustomValidity('');
+                        return false;
+                    }
                 }
             }
             return true;
