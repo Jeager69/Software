@@ -8,11 +8,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body class="bg-light text-dark">
-    <div th:replace="layout/header :: header"></div>
+    <div th:replace="~{layout/header :: header}"></div>
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <div th:replace="layout/sidebar :: sidebar"></div>
+            <div th:replace="~{layout/sidebar :: sidebar}"></div>
 
             <div class="col-lg-9">
                 <div class="mb-4 d-flex justify-content-end">

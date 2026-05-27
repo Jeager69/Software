@@ -8,11 +8,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body class="bg-light text-dark">
-    <div th:replace="layout/header :: header"></div>
+    <div th:replace="~{layout/header :: header}"></div>
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <div th:replace="layout/sidebar :: sidebar"></div>
+            <div th:replace="~{layout/sidebar :: sidebar}"></div>
 
             <div class="col-lg-9">
                 <div class="card shadow-sm mb-4">
@@ -23,6 +23,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Monto</th>
+                                    <th>Vuelto</th>
                                     <th>Método pago</th>
                                     <th>Estado</th>
                                     <th>Fecha</th>
@@ -32,6 +33,7 @@
                                 <tr th:each="pago : ${pagos}">
                                     <td class="fw-bold" th:text="${pago.idPago}"></td>
                                     <td class="fw-bold text-success" th:text="'S/ ' + ${pago.monto}"></td>
+                                    <td class="text-secondary small" th:text="${pago.vuelto}"></td>
                                     <td class="text-secondary small" th:text="${pago.metodoPago}"></td>
                                     <td>
                                         <span class="badge"

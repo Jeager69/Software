@@ -8,11 +8,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 </head>
 <body class="bg-light text-dark">
-    <div th:replace="layout/header :: header"></div>
+    <div th:replace="~{layout/header :: header}"></div>
 
     <div class="container-fluid mt-4">
         <div class="row">
-            <div th:replace="layout/sidebar :: sidebar"></div>
+            <div th:replace="~{layout/sidebar :: sidebar}"></div>
 
             <div class="col-lg-9">
                 <div class="card shadow-sm mb-4">
@@ -26,6 +26,8 @@
                                     <th>DNI</th>
                                     <th>Fecha Nacimiento</th>
                                     <th>Tutor</th>
+                                    <th>Correo Tutor</th>
+                                    <th>Teléfono Tutor</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,6 +37,8 @@
                                     <td th:text="${alumno.dni}"></td>
                                     <td th:text="${alumno.fechaNacimiento}"></td>
                                     <td th:text="${alumno.nombreTutor}"></td>
+                                    <td th:text="${alumno.correoTutor}"></td>
+                                    <td th:text="${alumno.telefonoTutor}"></td>
                                 </tr>
                             </tbody>
                         </table>

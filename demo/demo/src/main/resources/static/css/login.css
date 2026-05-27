@@ -1,0 +1,31 @@
+body {
+    position: relative;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Evita scrolls inesperados causados por el efecto blur */
+}
+
+/* Capa trasera exclusiva para la imagen de fondo */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Ruta de tu imagen (ajusta según tu estructura de carpetas) */
+    background-image: url(../img/login.webp); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Controla qué tan borrosa se ve la imagen */
+    filter: blur(8px); 
+    
+    /* Escala ligeramente la imagen para ocultar los bordes difuminados */
+    transform: scale(1.05); 
+    
+    /* Coloca el fondo detrás de todo el contenido del login */
+    z-index: -1; 
+}
