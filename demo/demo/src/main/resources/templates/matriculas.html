@@ -18,16 +18,29 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <span>Registro de Matrículas</span>
-                        <form class="d-flex align-items-center gap-2" th:action="@{/dashboard/matriculas}" method="get">
-                            <input type="search" name="search" class="form-control form-control-sm"
-                                placeholder="Buscar por código o alumno" th:value="${search}" />
+                        
+                        <form class="d-flex align-items-center gap-2 flex-wrap" th:action="@{/dashboard/matriculas}" method="get">
+
+                            <select name="estado" class="form-select form-select-sm" style="width: auto;">
+                                <option value="">Todos los estados</option>
+                                <option value="ACTIVA" th:selected="${estado == 'ACTIVA'}">ACTIVA</option>
+                                <option value="PENDIENTE" th:selected="${estado == 'PENDIENTE'}">PENDIENTE</option>
+                                <option value="ANULADA" th:selected="${estado == 'ANULADA'}">ANULADA</option>
+                            </select>
+
+                            <input type="search" name="search" class="form-control form-control-sm" style="max-width: 220px;"
+                                placeholder="Buscar por nombre" th:value="${search}" />
+                            
                             <button type="submit" class="btn btn-sm btn-secondary">Buscar</button>
                         </form>
                     </div>
-                    <div class="card-body py-2" th:if="${search != null and search != ''}">
-                        <div class="small text-muted">Resultados de búsqueda para: <strong
-                                th:text="${search}"></strong></div>
+                    
+                    <div class="card-body py-2" th:if="${(search != null and search != '') or categoriaId != null or (estado != null and estado != '')}">
+                        <div class="small text-muted">
+                            Resultados con filtros aplicados.
+                        </div>
                     </div>
+                    
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
@@ -43,13 +56,12 @@
                             <tbody>
                                 <tr th:each="matricula : ${matriculas}">
                                     <td class="fw-bold" th:text="${matricula.idMatricula}"></td>
-                                    <td class="text-monospace small" th:text="${matricula.codigoConstancia}">
-                                    </td>
+                                    <td class="text-monospace small" th:text="${matricula.codigoConstancia}"></td>
                                     <td th:text="${matricula.alumno.nombreCompleto}"></td>
                                     <td th:text="${matricula.categoria.nombreCategoria}"></td>
                                     <td>
                                         <span class="badge"
-                                            th:classappend="${matricula.estado.name() == 'CONFIRMADA' ? 'bg-success' : (matricula.estado.name() == 'PENDIENTE' ? 'bg-warning text-dark' : 'bg-danger')}"
+                                            th:classappend="${matricula.estado.name() == 'ACTIVA' ? 'bg-success' : (matricula.estado.name() == 'PENDIENTE' ? 'bg-warning text-dark' : 'bg-danger')}"
                                             th:text="${matricula.estado}">
                                         </span>
                                     </td>
@@ -59,16 +71,14 @@
                                                 class="btn btn-sm btn-outline-success">Ver</a>
                                             <a th:href="@{/dashboard/registro/{id}/edit(id=${matricula.idMatricula})}"
                                                 class="btn btn-sm btn-outline-primary" 
-                                                th:classappend="${matricula.estado.name() == 'ANULADA'} ? 'disabled' : ''"
-                                                >Editar</a> 
-                                            <form
-                                                th:action="@{/dashboard/matriculas/{id}/confirm(id=${matricula.idMatricula})}"
+                                                th:classappend="${matricula.estado.name() == 'ANULADA'} ? 'disabled' : ''">Editar</a> 
+                                            
+                                            <form th:action="@{/dashboard/matriculas/{id}/confirm(id=${matricula.idMatricula})}"
                                                 method="post" th:if="${matricula.estado.name() == 'PENDIENTE'}">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-accent-custom">Confirmar</button>
+                                                <button type="submit" class="btn btn-sm btn-accent-custom">Confirmar</button>
                                             </form>
-                                            <form
-                                                th:action="@{/dashboard/matriculas/{id}/cancel(id=${matricula.idMatricula})}"
+                                            
+                                            <form th:action="@{/dashboard/matriculas/{id}/cancel(id=${matricula.idMatricula})}"
                                                 method="post">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger"
                                                     th:disabled="${matricula.estado.name() == 'ANULADA'}">Anular</button>
