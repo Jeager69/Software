@@ -254,7 +254,7 @@
         const montoPreview = document.getElementById('montoPreview');
         const metodoPagoInput = document.getElementById('metodoPago');
         const montoPagoInput = document.getElementById('montoPago');
-        const fechaNacimientoInput = document.querySelector('[name="alumno.fechaNacimiento"]');
+        const fechaNacimientoInput = document.getElementById('alumno.fechaNacimiento') || document.querySelector('[name="alumno.fechaNacimiento"]');
 
         const summaryAlumno = document.getElementById('summaryAlumno');
         const summaryDni = document.getElementById('summaryDni');
@@ -490,6 +490,13 @@
 
         if (montoPagoInput) {
             montoPagoInput.addEventListener('input', updateVuelto);
+        }
+
+        if (isEditMode) {
+            // Carga la categoría y calcula el monto guardado históricamente
+            refreshMonto(); 
+            // Opcional: ejecuta el auto-select si necesitas refrescar la lógica por edad
+            autoSelectCategoriaByBirthdate(); 
         }
 
         showStep(currentStep);
