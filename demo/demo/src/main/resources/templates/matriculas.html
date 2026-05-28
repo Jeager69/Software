@@ -58,7 +58,9 @@
                                             <a th:href="@{/dashboard/registro/print/{id}(id=${matricula.idMatricula})}"
                                                 class="btn btn-sm btn-outline-success">Ver</a>
                                             <a th:href="@{/dashboard/registro/{id}/edit(id=${matricula.idMatricula})}"
-                                                class="btn btn-sm btn-outline-primary">Editar</a>
+                                                class="btn btn-sm btn-outline-primary" 
+                                                th:classappend="${matricula.estado.name() == 'ANULADA'} ? 'disabled' : ''"
+                                                >Editar</a> 
                                             <form
                                                 th:action="@{/dashboard/matriculas/{id}/confirm(id=${matricula.idMatricula})}"
                                                 method="post" th:if="${matricula.estado.name() == 'PENDIENTE'}">
