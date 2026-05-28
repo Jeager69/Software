@@ -107,25 +107,26 @@ public class AdminDashboardController {
     @GetMapping("/matriculas")
     public String showMatriculas(@RequestParam(required = false) String search,
             @RequestParam(required = false) EstadoMatricula estado,
+            @RequestParam(required = false) Long categoriaId, // Parámetro mapeado desde la vista
             Model model) {
         model.addAttribute("alumnoCount", alumnoRepo.count());
         model.addAttribute("categoriaCount", categoriaRepo.count());
         model.addAttribute("matriculaCount", matriculaRepo.count());
         model.addAttribute("pagoCount", pagoRepo.count());
 
-        if (search != null && !search.isBlank()) {
-            if (estado != null) {
-                model.addAttribute("matriculas", matriculaRepo.searchByEstado(estado, search.trim()));
-            } else {
-                model.addAttribute("matriculas", matriculaRepo.search(search.trim()));
-            }
-        } else if (estado != null) {
-            model.addAttribute("matriculas", matriculaRepo.findByEstado(estado));
-        } else {
-            model.addAttribute("matriculas", matriculaRepo.findAll());
-        }
+        // 1. OBLIGATORIO: Cargar la lista completa de categorías para rellenar el <select>
+        model.addAttribute("categorias", categoriaRepo.findAll());
+
+        // 2. Ejecutar la consulta en base a los filtros utilizando el Servicio (Recomendado)
+        // Nota: Asegúrate de tener implementado este método combinado en tu MatriculaService o adaptarlo a tus repositorios.
+        model.addAttribute("matriculas", matriculaService.buscarConFiltros(search, estado, categoriaId));
+
+        // 3. Devolver los valores actuales para mantener el estado de los filtros en la vista
         model.addAttribute("search", search);
+        model.addAttribute("estado", estado != null ? estado.name() : "");
+        model.addAttribute("categoriaId", categoriaId);
         model.addAttribute("entity", "matriculas");
+        
         return "matriculas";
     }
 

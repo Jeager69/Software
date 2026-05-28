@@ -28,6 +28,16 @@
                                 <option value="ANULADA" th:selected="${estado == 'ANULADA'}">ANULADA</option>
                             </select>
 
+                            <select name="categoriaId" class="form-select form-select-sm" style="width: auto;">
+                                <option value="">Todas las categorías</option>
+                                <th:block th:each="cat : ${categorias}">
+                                    <option th:value="${cat.idCategoria}" 
+                                            th:text="${cat.nombreCategoria}"
+                                            th:selected="${cat.idCategoria == categoriaId}">
+                                    </option>
+                                </th:block>
+                            </select>
+
                             <input type="search" name="search" class="form-control form-control-sm" style="max-width: 220px;"
                                 placeholder="Buscar por nombre" th:value="${search}" />
                             

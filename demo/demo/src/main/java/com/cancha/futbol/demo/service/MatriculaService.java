@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-import java.util.UUID; // 👈 Importante para el código único
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +38,45 @@ public class MatriculaService {
         return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Matricula no encontrada: " + id));
     }
 
+    /**
+     * 🔍 NUEVO: Filtro combinado dinámico para la vista de gestión de matrículas
+     */
+    public List<Matricula> buscarConFiltros(String search, EstadoMatricula estado, Long categoriaId) {
+        // 1. Si no hay ningún filtro seleccionado, devolvemos el listado completo
+        if ((search == null || search.isBlank()) && estado == null && categoriaId == null) {
+            return repo.findAll();
+        }
+
+        String query = (search != null) ? search.trim() : "";
+
+        // 2. Bloque de lógica en cascada evaluando las combinaciones
+        if (!query.isBlank()) {
+            if (estado != null && categoriaId != null) {
+                return repo.findByEstadoAndCategoriaIdCategoriaAndAlumnoNombreCompletoContainingIgnoreCase(estado, categoriaId, query);
+            } else if (estado != null) {
+                return repo.searchByEstado(estado, query); 
+            } else if (categoriaId != null) {
+                return repo.findByCategoriaIdCategoriaAndAlumnoNombreCompletoContainingIgnoreCase(categoriaId, query);
+            } else {
+                return repo.search(query);
+            }
+        } else {
+            // Cuando la barra de texto está vacía pero se usan los selectores desplegables
+            if (estado != null && categoriaId != null) {
+                return repo.findByEstadoAndCategoriaIdCategoria(estado, categoriaId);
+            } else if (estado != null) {
+                return repo.findByEstado(estado);
+            } else {
+                return repo.findByCategoriaIdCategoria(categoriaId);
+            }
+        }
+    }
+
     @Transactional
     public Matricula create(Matricula m) {
         Alumno alumno = resolveAlumno(m.getAlumno());
         m.setAlumno(alumno);
 
-        // Determine category by age if not provided
         Categoria categoriaToUse = null;
         if (m.getCategoria() != null && m.getCategoria().getIdCategoria() != null) {
             categoriaToUse = categoriaRepo.findById(m.getCategoria().getIdCategoria())
@@ -59,7 +92,6 @@ public class MatriculaService {
                     .orElseThrow(() -> new ResourceNotFoundException("No existe categoria para la edad: " + edad));
         }
 
-        // By default creation represents a confirmed matricula: check cupos and decrement
         if (categoriaToUse.getCuposDisponibles() == null || categoriaToUse.getCuposDisponibles() <= 0) {
             throw new ResourceNotFoundException("No hay cupos disponibles en la categoria: " + categoriaToUse.getNombreCategoria());
         }
@@ -69,8 +101,6 @@ public class MatriculaService {
         m.setCategoria(categoriaToUse);
         m.setEstado(EstadoMatricula.ACTIVA);
         m.setReservationExpiry(null);
-
-        // 🌟 NUEVO: Asignar código de constancia único al crear
         m.setCodigoConstancia(generarCodigoUnico());
 
         return repo.save(m);
@@ -78,7 +108,6 @@ public class MatriculaService {
 
     @Transactional
     public Matricula reserve(Matricula m, int minutes) {
-        // Reserve a slot (estado=PENDIENTE) and set expiry
         Alumno alumno = resolveAlumno(m.getAlumno());
         m.setAlumno(alumno);
 
@@ -95,15 +124,12 @@ public class MatriculaService {
             throw new ResourceNotFoundException("No hay cupos disponibles en la categoria: " + categoriaToUse.getNombreCategoria());
         }
 
-        // decrement cupo
         categoriaToUse.setCuposDisponibles(categoriaToUse.getCuposDisponibles() - 1);
         categoriaRepo.save(categoriaToUse);
 
         m.setCategoria(categoriaToUse);
         m.setEstado(EstadoMatricula.PENDIENTE);
         m.setReservationExpiry(LocalDateTime.now().plusMinutes(minutes));
-
-        // 🌟 NUEVO: Asignar código también si entra como reserva inicial
         m.setCodigoConstancia(generarCodigoUnico());
 
         return repo.save(m);
@@ -113,7 +139,7 @@ public class MatriculaService {
     public Matricula confirm(Long id) {
         Matricula exist = getById(id);
         if (exist.getEstado() == EstadoMatricula.ACTIVA) {
-            return exist; // already confirmed
+            return exist;
         }
         exist.setEstado(EstadoMatricula.ACTIVA);
         exist.setReservationExpiry(null);
@@ -185,9 +211,6 @@ public class MatriculaService {
             exist.setEstado(m.getEstado());
         }
 
-        // 💡 NOTA: No modificamos el campo 'exist.setCodigoConstancia(...)'.
-        // Debido a que 'exist' viene directo de la BD, conservará su string de origen intacto.
-
         return repo.save(exist);
     }
 
@@ -238,13 +261,9 @@ public class MatriculaService {
         repo.delete(exist);
     }
 
-    /**
-     * 🛠️ Generador interno de código de constancia único
-     * Retorna una estructura limpia: MAT-2026-XXXX (Longitud apróx: 17 caracteres)
-     */
     private String generarCodigoUnico() {
-        String añoActual = String.valueOf(LocalDate.now().getYear()); // "2026"
-        String randomHex = UUID.randomUUID().toString().substring(0, 5).toUpperCase(); // 5 alfanuméricos únicos
+        String añoActual = String.valueOf(LocalDate.now().getYear());
+        String randomHex = UUID.randomUUID().toString().substring(0, 5).toUpperCase();
         return "MAT-" + añoActual + "-" + randomHex;
     }
 }
