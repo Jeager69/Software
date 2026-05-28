@@ -20,6 +20,16 @@ public class PagoService {
         this.matriculaRepo = matriculaRepo;
     }
 
+    // =========================================================================
+    // MÉTODO NUEVO: Soporta la filtración por Método de Pago e ID de Matrícula
+    // =========================================================================
+    public List<Pago> listarPagosConFiltro(String metodo, String search) {
+        String metodoFiltro = (metodo != null && !metodo.isBlank()) ? metodo.trim() : null;
+        String searchFiltro = (search != null && !search.isBlank()) ? search.trim() : null;
+        
+        return repo.searchPagos(metodoFiltro, searchFiltro);
+    }
+
     public List<Pago> getAll() {
         return repo.findAll();
     }

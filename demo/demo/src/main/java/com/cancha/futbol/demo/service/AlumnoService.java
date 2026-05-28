@@ -16,6 +16,18 @@ public class AlumnoService {
         this.repo = repo;
     }
 
+    // =========================================================================
+    // MÉTODO ACTUALIZADO: Soportar la búsqueda por Nombre OR DNI desde el Service
+    // =========================================================================
+    public List<Alumno> listarAlumnosConFiltro(String search) {
+        if (search != null && !search.trim().isEmpty()) {
+            String query = search.trim();
+            // Pasamos la misma cadena para que busque coincidencia en ambos campos
+            return repo.findByNombreCompletoContainingIgnoreCaseOrDniContainingIgnoreCase(query, query);
+        }
+        return repo.findAll();
+    }
+
     public List<Alumno> getAll() {
         return repo.findAll();
     }

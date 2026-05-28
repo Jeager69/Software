@@ -16,12 +16,38 @@
 
             <div class="col-lg-9">
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header">Registro de Pagos</div>
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <span>Registro de Pagos</span>
+                        
+                        <form class="d-flex align-items-center gap-2 flex-wrap" th:action="@{/dashboard/pagos}" method="get">
+
+                            <select name="metodo" class="form-select form-select-sm" style="width: auto;">
+                                <option value="">Todos los metodos</option>
+                                <option value="Efectivo" th:selected="${metodo == 'Efectivo'}">Efectivo</option>
+                                <option value="Tarjeta" th:selected="${metodo == 'Tarjeta'}">Tarjeta</option>
+                                <option value="Transferencia" th:selected="${metodo == 'Transferencia'}">Transferencia</option>
+                                <option value ="Yape" th:selected="${metodo == 'Yape'}">Yape</option>
+                            </select>
+
+                            <input type="search" name="search" class="form-control form-control-sm" style="max-width: 220px;"
+                                placeholder="Buscar por Id Matricula" th:value="${search}" />
+                            
+                            <button type="submit" class="btn btn-sm btn-secondary">Buscar</button>
+                        </form>
+                    </div>
+                    
+                    <div class="card-body py-2" th:if="${(search != null and search != '') or categoriaId != null or (estado != null and estado != '')}">
+                        <div class="small text-muted">
+                            Resultados con filtros aplicados.
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>ID Matricula</th>
                                     <th>Monto</th>
                                     <th>Vuelto</th>
                                     <th>Método pago</th>
@@ -32,6 +58,7 @@
                             <tbody>
                                 <tr th:each="pago : ${pagos}">
                                     <td class="fw-bold" th:text="${pago.idPago}"></td>
+                                    <td class="text-secondary small" th:text="${pago.matricula.idMatricula}"></td>
                                     <td class="fw-bold text-success" th:text="'S/ ' + ${pago.monto}"></td>
                                     <td class="text-secondary small" th:text="${pago.vuelto}"></td>
                                     <td class="text-secondary small" th:text="${pago.metodoPago}"></td>

@@ -70,13 +70,25 @@ public class AdminDashboardController {
         return "dashboard-main";
     }
 
+    // =========================================================================
+    // MÉTODO ACTUALIZADO: Añadido soporte para parámetros de búsqueda 'search'
+    // =========================================================================
     @GetMapping("/alumnos")
-    public String showAlumnos(Model model) {
+    public String showAlumnos(@RequestParam(required = false) String search, Model model) {
         model.addAttribute("alumnoCount", alumnoRepo.count());
         model.addAttribute("categoriaCount", categoriaRepo.count());
         model.addAttribute("matriculaCount", matriculaRepo.count());
         model.addAttribute("pagoCount", pagoRepo.count());
-        model.addAttribute("alumnos", alumnoRepo.findAll());
+        
+        if (search != null && !search.isBlank()) {
+            String query = search.trim();
+            // Pasamos 'query' dos veces: una para el nombre y otra para el DNI
+            model.addAttribute("alumnos", alumnoRepo.findByNombreCompletoContainingIgnoreCaseOrDniContainingIgnoreCase(query, query));
+        } else {
+            model.addAttribute("alumnos", alumnoRepo.findAll());
+        }
+        
+        model.addAttribute("search", search); 
         model.addAttribute("entity", "alumnos");
         return "alumnos";
     }
@@ -118,12 +130,20 @@ public class AdminDashboardController {
     }
 
     @GetMapping("/pagos")
-    public String showPagos(Model model) {
+    public String showPagos(@RequestParam(required = false) String metodo,
+                            @RequestParam(required = false) String search,
+                            Model model) {
         model.addAttribute("alumnoCount", alumnoRepo.count());
         model.addAttribute("categoriaCount", categoriaRepo.count());
         model.addAttribute("matriculaCount", matriculaRepo.count());
         model.addAttribute("pagoCount", pagoRepo.count());
-        model.addAttribute("pagos", pagoRepo.findAll());
+        
+        // Ejecutamos la búsqueda filtrada a través de nuestro servicio
+        model.addAttribute("pagos", pagoService.listarPagosConFiltro(metodo, search));
+        
+        // Enviamos los valores de regreso a la vista para mantener los formularios consistentes
+        model.addAttribute("metodo", metodo);
+        model.addAttribute("search", search);
         model.addAttribute("entity", "pagos");
         return "pagos";
     }
@@ -513,7 +533,6 @@ public class AdminDashboardController {
     public String showPrintView(@PathVariable Long id, Model model) {
         Matricula matricula = matriculaRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Matrícula no encontrada: " + id));
         model.addAttribute("matricula", matricula);
-        // try to find a payment for this matricula (may be null)
         Pago pago = pagoRepo.findAll().stream().filter(p -> p.getMatricula() != null && p.getMatricula().getIdMatricula() != null && p.getMatricula().getIdMatricula().equals(id)).findFirst().orElse(null);
         model.addAttribute("pago", pago);
         return "registro_print";

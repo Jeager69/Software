@@ -16,7 +16,24 @@
 
             <div class="col-lg-9">
                 <div class="card shadow-sm mb-4">
-                    <div class="card-header">Registro de Alumnos</div>
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <span>Registro de Alumnos</span>
+                        
+                        <form class="d-flex align-items-center gap-2 flex-wrap" th:action="@{/dashboard/alumnos}" method="get">
+
+                            <input type="search" name="search" class="form-control form-control-sm" style="max-width: 220px;"
+                                placeholder="Buscar por nombre o DNI" th:value="${search}" />
+                            
+                            <button type="submit" class="btn btn-sm btn-secondary">Buscar</button>
+                        </form>
+                    </div>
+
+                    <div class="card-body py-2" th:if="${(search != null and search != '')}">
+                        <div class="small text-muted">
+                            Resultados con filtros aplicados.
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
