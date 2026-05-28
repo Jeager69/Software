@@ -40,6 +40,8 @@
                             <input type="hidden" th:field="*{idMatricula}" />
                             <input type="hidden" th:field="*{alumno.idAlumno}" />
                             
+                            <input type="hidden" th:if="${matricula != null and matricula.idMatricula != null}" th:field="*{categoria.idCategoria}" />
+                            
                             <div id="step-1">
                                 <h5 class="mb-3">Paso 1 - Datos del Alumno</h5>
                                 <div class="row g-3">
@@ -121,15 +123,20 @@
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <label class="form-label">Categoría *</label>
-                                        <select id="categoriaSelect" class="form-select"
-                                            th:field="*{categoria.idCategoria}" required
+                                        <select id="categoriaSelect" class="form-select" required
+                                            th:name="${matricula != null and matricula.idMatricula != null} ? '' : 'categoria.idCategoria'"
+                                            th:disabled="${matricula != null and matricula.idMatricula != null}"
                                             th:classappend="${#fields.hasErrors('categoria.idCategoria')} ? ' is-invalid'">
-                                            <option value="" disabled selected>Seleccionar categoría</option>
+                                            <option value="" disabled th:selected="*{categoria == null or categoria.idCategoria == null}">Seleccionar categoría</option>
                                             <option th:each="cat : ${categorias}" th:value="${cat.idCategoria}"
                                                 th:text="${cat.nombreCategoria + ' - S/ ' + cat.montoMatricula}"
+                                                th:selected="${matricula.categoria != null and cat.idCategoria == matricula.categoria.idCategoria}"
                                                 th:attr="data-minima=${cat.edadMinima},data-maxima=${cat.edadMaxima},data-monto=${cat.montoMatricula}">
                                             </option>
                                         </select>
+                                        <div class="form-text text-muted" th:if="${matricula != null and matricula.idMatricula != null}">
+                                            La categoría no puede modificarse en una matrícula existente.
+                                        </div>
                                         <div class="invalid-feedback"
                                             th:if="${#fields.hasErrors('categoria.idCategoria')}"
                                             th:errors="*{categoria.idCategoria}"></div>
@@ -359,10 +366,11 @@
         }
 
         function autoSelectCategoriaByBirthdate() {
-            if (!fechaNacimientoInput || !categoriaSelect) return;
-            // Se quita la condición previa para que se recalcule si cambia la fecha
+            // Si está en modo edición, NO recalculamos ni cambiamos la categoría por la edad.
+            if (isEditMode || !fechaNacimientoInput || !categoriaSelect) return;
+            
             const age = calculateAge(fechaNacimientoInput.value);
-            if (age === null || age < 0 || age > 120) return; // Validación de rango de edad lógico
+            if (age === null || age < 0 || age > 120) return;
             
             let matchedOption = null;
             for (const option of categoriaSelect.options) {
@@ -376,7 +384,7 @@
             if (matchedOption) {
                 categoriaSelect.value = matchedOption.value;
             } else {
-                categoriaSelect.value = ""; // Si no hay match, vuelve a pedir selección externa
+                categoriaSelect.value = "";
             }
             refreshMonto();
         }
@@ -393,21 +401,18 @@
                 }
             }
             
-            // Validaciones avanzadas del Paso 1
             if (stepIndex === 0) {
-
                 const correoInput = document.querySelector('[name="alumno.correoTutor"]');
                 if (correoInput) {
                     const correoValue = correoInput.value.trim();
-                    // Expresión regular idéntica a la de Java (ads@asd.asd)
                     const regexCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
                     
                     if (!regexCorreo.test(correoValue)) {
                         correoInput.setCustomValidity('El correo debe cumplir con el formato estándar (ejemplo: ads@asd.asd)');
                         correoInput.reportValidity();
-                        correoInput.setCustomValidity(''); // Limpia el estado para futuras evaluaciones
+                        correoInput.setCustomValidity('');
                         alert('¡Formato de correo inválido!\n\nPor favor, ingresa un correo electrónico completo que incluya su extensión.\nEjemplo correcto: ads@asd.asd');
-                        return false; // Bloquea el avance al paso 2
+                        return false;
                     }
                 }
 
@@ -420,8 +425,6 @@
                         alert('La fecha de nacimiento no puede ser una fecha futura.');
                         return false;
                     }
-                    
-                    // Detener si el año es ridículamente largo (Ej. 202444) antes de enviar a DB
                     if (selectedDate.getFullYear() > 9999) {
                         alert('Por favor, introduce un año válido de 4 dígitos.');
                         return false;
@@ -429,9 +432,9 @@
                 }
             }
             
-            // Validaciones avanzadas del Paso 2
             if (stepIndex === 1) {
-                if (categoriaSelect && categoriaSelect.value === "") {
+                // Quitamos la validación restrictiva del select si está deshabilitado por el modo edición
+                if (!isEditMode && categoriaSelect && categoriaSelect.value === "") {
                     categoriaSelect.setCustomValidity('Debe seleccionar una categoría válida obligatoriamente.');
                     categoriaSelect.reportValidity();
                     categoriaSelect.setCustomValidity('');
@@ -492,11 +495,9 @@
             montoPagoInput.addEventListener('input', updateVuelto);
         }
 
+        // Ejecución inicial según el modo
         if (isEditMode) {
-            // Carga la categoría y calcula el monto guardado históricamente
-            refreshMonto(); 
-            // Opcional: ejecuta el auto-select si necesitas refrescar la lógica por edad
-            autoSelectCategoriaByBirthdate(); 
+            refreshMonto(); // Solo calcula el texto del costo estimado basándose en la opción ya seleccionada por Thymeleaf
         }
 
         showStep(currentStep);
